@@ -11,14 +11,14 @@ public class UsageExample {
 	/**
 	 * Accessing the elements of a JSONObject.
 	 */
-	static public void accessExample(JSONObject jo) {
+	 public static void accessExample(JSONObject jo) {
 
 		System.out.println("==============================");
 		System.out.println("Accessing a JSONObject Example");
 		System.out.println("==============================");
 		System.out.println();
 
-		// We can print all keys like in a MAP
+		// We can print all keys like in a MAP		
 		//
 		System.out.println();
 		System.out.println("** Printing keys");
