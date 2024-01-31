@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import simulator.factories.Factory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,20 +14,20 @@ public class Simulator implements JSONable{
 	private Factory<Animal> _animals_factory;
 	private Factory<Region> _regions_factory;
 	
-	private int _cols;
-	private int _rows;
-	private int _width;
-	private int _height;
+//	private int _cols;
+//	private int _rows;
+//	private int _width;
+//	private int _height;
 	
 	private RegionManager _region_manager;
 	private List<Animal> _animal_list;
 	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory, Factory<Region> regions_factory) {
-		this._cols = cols;
-		this._rows = rows;
-		this._width = width;
-		this._height = height;
+//		this._cols = cols;
+//		this._rows = rows;
+//		this._width = width;
+//		this._height = height;
 		
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;		
@@ -71,6 +73,6 @@ public class Simulator implements JSONable{
 	}
 	
 	public JSONObject as_JSON() {
-		
+		return null;
 	}
 }
