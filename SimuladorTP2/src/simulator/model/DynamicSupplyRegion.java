@@ -1,5 +1,7 @@
 package simulator.model;
 
+import simulator.misc.Utils;
+
 public class DynamicSupplyRegion extends Region{
 	
 	private double _food;
@@ -21,18 +23,18 @@ public class DynamicSupplyRegion extends Region{
 		//TODO cambiar para que solo sean los hervívoros
 		int n = this.animalList.size();
 		
-		double food_returned = Math.min(_food,60.0*Math.exp(-Math.max(0,n-5.0)*2.0)*dt);
+		double food_returned = Math.min(_food, 60.0 * Math.exp(-Math.max(0, n - 5.0) * 2.0) * dt);
 		
 		this._food -= food_returned;
 		
 		return food_returned;
-		
 	}
 	
 	@Override
 	public void update(double dt) {
-		// TODO incrementar con probabilidad de 0,5 la comida por dt*_factor
-	
 		
+		// TODO incrementar con probabilidad de 0,5 la comida por dt*_factor
+		
+		if(Utils._rand.nextBoolean()) this._food += dt * this._factor;
 	}
 }

@@ -20,6 +20,12 @@ public class Wolf extends Animal{
 		this._hunt_target = null;
 		this._hunting_strategy = p1._hunting_strategy;
 	}
+
+	@Override
+	public void update(double dt) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import simulator.misc.Utils;
 import simulator.misc.Vector2D;
 
-public class Animal implements Entity, AnimalInfo{
+public abstract class Animal implements Entity, AnimalInfo{
 	
 	private String _genetic_code;
 	
@@ -13,12 +13,12 @@ public class Animal implements Entity, AnimalInfo{
 	private State _state;
 	
 	private Vector2D _pos;
-	private Vector2D _dest;
+	protected Vector2D _dest;
 	
-	private double _energy; 
+	protected double _energy; 
 	private double _speed; 
-	private double _age;
-	private double _desire;
+	protected double _age;
+	protected double _desire;
 	private double _sight_range;
 
 	private Animal _mate_target;
@@ -26,6 +26,7 @@ public class Animal implements Entity, AnimalInfo{
 
 	private AnimalMapView _region_mngr;
 	 
+
 	protected SelectionStrategy _mate_strategy;
 	
 	protected Animal(String genetic_code, Diet diet, double sight_range,
@@ -36,8 +37,7 @@ public class Animal implements Entity, AnimalInfo{
 		this._sight_range = sight_range;
 		this._mate_strategy = mate_strategy;
 		
-		//cambiar para cuando pueda ser NULL
-		this._pos = pos;
+		if(pos != null) this._pos = pos;			
 		
 		this._speed = Utils.get_randomized_parameter(init_speed, 0.1);
 		
@@ -69,6 +69,21 @@ public class Animal implements Entity, AnimalInfo{
 		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range()+p2.get_sight_range())/2, 0.2);
 		this._speed = Utils.get_randomized_parameter((p1.get_speed()+p2.get_speed())/2, 0.2);
 		
+	}
+	
+	protected Vector2D randomPos() {
+		
+		//TODO cambiar para que use anchura y altura del regionManager
+		double x = Utils._rand.nextDouble(800); 
+		double y = Utils._rand.nextDouble(600); 
+		
+		Vector2D v = new Vector2D(x, y);
+		
+		return v;
+	}
+
+	public AnimalMapView get_region_mngr() {
+		return _region_mngr;
 	}
 
 	@Override
@@ -120,19 +135,14 @@ public class Animal implements Entity, AnimalInfo{
 	public boolean is_pregnant() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void update(double dt) {
-		// TODO Auto-generated method stub
-		
-	}
+	}	
+	
 	void init(AnimalMapView reg_mngr) {
 		
 		this._region_mngr = reg_mngr;
 		
 		if(this._pos == null) {
-			//TODO completar elegir posicion aleatoria
+			this._pos = randomPos();
 		}else this._pos = adjustPosition(this._pos.getX(), this._pos.getY());
 		
 		//TODO elegir destino aleatorio dentro del mapa

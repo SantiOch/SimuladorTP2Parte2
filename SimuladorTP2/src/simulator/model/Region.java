@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Region implements Entity, FoodSupplier, RegionInfo{
+public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 
 	protected List<Animal> animalList;
 	
@@ -28,6 +28,7 @@ public class Region implements Entity, FoodSupplier, RegionInfo{
 	}
 	
 	public JSONObject as_JSON() {
+		
 		//TODO 
 		
 		JSONObject jo = new JSONObject();
@@ -43,11 +44,6 @@ public class Region implements Entity, FoodSupplier, RegionInfo{
 		return jo;
 	}
 	
-	@Override
-	public double get_food(Animal a, double dt) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public void update(double dt) {
