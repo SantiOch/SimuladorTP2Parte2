@@ -140,6 +140,7 @@ public class Main {
 	}
 
 	private static void start(String[] args) throws Exception {
+		
 		init_factories();
 		parse_args(args);
 		switch (_mode) {

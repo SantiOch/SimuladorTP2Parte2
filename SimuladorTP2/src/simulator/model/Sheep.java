@@ -114,7 +114,7 @@ public class Sheep extends Animal{
 
 				this._danger_source = 
 						this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
-								/*TODO cambiar con el filtro*/ (Animal a) -> { return a.get_genetic_code() != this.get_genetic_code();}));
+								/*PREGUNTAR cambiar con el filtro*/ (Animal a) -> { return a.get_genetic_code() != this.get_genetic_code();}));
 			}
 
 			//Comprobar otra vez ya que puede haver escogido un nuevo danger source

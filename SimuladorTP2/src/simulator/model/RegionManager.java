@@ -83,9 +83,8 @@ public class RegionManager implements AnimalMapView{
 		 * con esos miro en que regiones toco, ver en cada una la lista de animales, ya que son candidatos a que me interesen
 		 * con cuales me quedo, con los que estén lo suficientemente cerca para verlos y que además cumplan el predicate,
 		 * y que la distancia a el animal es menor que r ( campo de visión), y que además cumpla el test
-		 * TODO Predicate con función lambda codigo genético del animal = sheep o wolf
-		 */
-		
+		 * TODO Predicate con función lambda codigo genético del animal = sheep o wolf */
+
 		return listAux;
 	}
 	
@@ -98,27 +97,41 @@ public class RegionManager implements AnimalMapView{
 	void register_animal(Animal a) {
 		
 		//TODO encuentra la región a la que tiene que pertenecer el animal (a partir de su posición) y 
-		//lo añade a esa región y actualiza _animal_region. Creo que ya está bien (he preguntado)
+		//lo añade a esa región y actualiza _animal_region.
 		
-		int regionI = (int) Math.floor((a.get_position().getX() / this._region_width)) ;
-		int regionJ = (int) Math.floor((a.get_position().getY() / this._region_height)) ;
+		Region r = regByPos(a);
 		
 		a.init(this);
 
-		this._region[regionI][regionJ].add_animal(a);
+		r.add_animal(a);
 	}
 	
 	void unregister_animal(Animal a) {
-		//TODO Creo que está bien así
-		this._animal_region.get(a).remove_animal(a);
-		this._animal_region.remove(a);
 		
+		//TODO Creo que está bien así
+		
+		this._animal_region.get(a).remove_animal(a);
+		this._animal_region.remove(a);	
 	}
 	
 	void update_animal_region(Animal a) {
+		
 		//TODO Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición actual),
 		//y si es distinta de su región actual lo añade a la nueva región, 
 		//lo quita de la anterior, y actualiza _animal_region.
+		
+		Region act = this._animal_region.get(a);
+	
+		Region newReg = regByPos(a);
+		
+		if(act != newReg) {
+			
+			act.remove_animal(a);
+			newReg.add_animal(a);
+			
+			this._animal_region.remove(a);
+			this._animal_region.put(a, newReg);
+		}
 	}
 
 	@Override
@@ -127,7 +140,6 @@ public class RegionManager implements AnimalMapView{
 		//TODO Preguntar a Pablo
 		
 		return this._animal_region.get(a).get_food(a, dt);
-
 	}
 	
 	void update_all_regions(double dt) {
@@ -136,6 +148,14 @@ public class RegionManager implements AnimalMapView{
 				Reg.update(dt);
 			}
 		}
+	}
+	
+	private Region regByPos(Animal a) {
+		
+		int regionI = (int) Math.floor((a.get_position().getX() / this._region_width)) ;
+		int regionJ = (int) Math.floor((a.get_position().getY() / this._region_height)) ;
+		
+		return this._region[regionI][regionJ];
 	}
 
 	@Override
