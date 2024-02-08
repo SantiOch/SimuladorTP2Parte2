@@ -9,20 +9,20 @@ public abstract class Animal implements Entity, AnimalInfo{
 	
 	private String _genetic_code;
 	
+	protected State _state;
 	private Diet _diet;
-	private State _state;
 	
-	private Vector2D _pos;
 	protected Vector2D _dest;
+	protected Vector2D _pos;
 	
 	protected double _energy; 
-	private double _speed; 
 	protected double _age;
 	protected double _desire;
+	private double _speed; 
 	private double _sight_range;
 
-	private Animal _mate_target;
-	private Animal _baby;
+	protected Animal _mate_target;
+	protected Animal _baby;
 
 	private AnimalMapView _region_mngr;
 	 
@@ -30,7 +30,9 @@ public abstract class Animal implements Entity, AnimalInfo{
 	protected SelectionStrategy _mate_strategy;
 	
 	protected Animal(String genetic_code, Diet diet, double sight_range,
-      double init_speed, SelectionStrategy mate_strategy, Vector2D pos){
+      double init_speed, SelectionStrategy mate_strategy, Vector2D pos) throws IllegalArgumentException{
+		
+		//FIXME Lanzar excepciones
 		
 		this._genetic_code = genetic_code;
 		this._diet = diet;
@@ -53,6 +55,8 @@ public abstract class Animal implements Entity, AnimalInfo{
 	
 	protected Animal(Animal p1, Animal p2) {
 		
+		//FIXME Lanzar excepciones
+		
 		this._region_mngr = null;
 		this._mate_target = null;
 		this._dest = null;
@@ -60,6 +64,8 @@ public abstract class Animal implements Entity, AnimalInfo{
 		
 		this._state = State.NORMAL;
 		this._desire = 0.0;
+		
+		this._mate_strategy = p2._mate_strategy;
 		
 		this._genetic_code = p1._genetic_code;
 		this._diet = p1._diet;
@@ -133,22 +139,28 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 	@Override
 	public boolean is_pregnant() {
-		// TODO Auto-generated method stub
-		return false;
+		return this._baby != null;
 	}	
+	
+	public void resetDesire() {
+		this._desire = 0.0;
+	}
 	
 	void init(AnimalMapView reg_mngr) {
 		
 		this._region_mngr = reg_mngr;
 		
+		//Elegir posicion aleatoria si la posicion es null y si no ajustarla para que esté dentro
 		if(this._pos == null) {
 			this._pos = randomPos();
 		}else this._pos = adjustPosition(this._pos.getX(), this._pos.getY());
 		
-		//TODO elegir destino aleatorio dentro del mapa
+		//Elegir destino aleatorio dentro del mapa
+		this._dest = randomPos();
 	}
 	
-	private Vector2D adjustPosition(double x, double y) {
+	//Función para ajustar la posición si está fuera del mapa
+	protected Vector2D adjustPosition(double x, double y) {
 
 		int width = this._region_mngr.get_width();
 		int height = this._region_mngr.get_height();
@@ -161,7 +173,7 @@ public abstract class Animal implements Entity, AnimalInfo{
     return new Vector2D(x, y);
 	}
 
-	Animal deliver_baby() {
+	public Animal deliver_baby() {
 		
 		Animal baby = this._baby;
 		
@@ -176,6 +188,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this._pos = _pos.plus(_dest.minus(_pos).direction().scale(speed));
 	}
 	
+	@Override
 	public JSONObject as_JSON(){
 		
 		JSONObject jo = new JSONObject();

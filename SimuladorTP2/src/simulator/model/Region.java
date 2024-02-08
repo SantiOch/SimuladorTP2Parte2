@@ -5,7 +5,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collections;
 
 public abstract class Region implements Entity, FoodSupplier, RegionInfo{
@@ -13,12 +13,13 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 	protected List<Animal> animalList;
 	
 	public Region() {
-		this.animalList = new ArrayList<Animal>();
+		this.animalList = new LinkedList<Animal>();
 	}
 	
 	final void add_animal(Animal a) {
 		this.animalList.add(a);
 	}
+	
 	final void remove_animal(Animal a) {
 		this.animalList.remove(a);
 	}
@@ -27,9 +28,10 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 		return Collections.unmodifiableList(this.animalList);
 	}
 	
+	@Override
 	public JSONObject as_JSON() {
 		
-		//TODO 
+		//Creo que está bien así, preguntar a Pablo , está bien (He preguntado)
 		
 		JSONObject jo = new JSONObject();
 		JSONArray ja = new JSONArray();
@@ -40,15 +42,6 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 		
 		jo.put("animals", ja);
 	
-		
 		return jo;
 	}
-	
-
-	@Override
-	public void update(double dt) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

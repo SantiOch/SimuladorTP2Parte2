@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import simulator.factories.Factory;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collections;
 
 public class Simulator implements JSONable{
@@ -33,7 +33,7 @@ public class Simulator implements JSONable{
 		this._regions_factory = regions_factory;		
 		
 		this._region_manager = new RegionManager(cols, rows, width, height);
-		this._animal_list = new ArrayList<Animal>();
+		this._animal_list = new LinkedList<>();
 		this._time = 0.0;
 	}
 	
@@ -54,6 +54,11 @@ public class Simulator implements JSONable{
 	
 	public void add_animal(JSONObject a_json) {
 		//TODO crear animal y llamar a add_animal
+		Animal a;
+		if(a_json.get("type") == "wolf") {
+			//No se que estrategia coger
+		}
+		
 	}
 	
 	public MapInfo get_map_info() {

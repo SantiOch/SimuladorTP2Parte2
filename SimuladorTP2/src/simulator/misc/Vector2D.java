@@ -148,6 +148,7 @@ public class Vector2D {
 	}
 
 	// return a string representation of the vector
+	@Override
 	public String toString() {
 		return "[" + _x + "," + _y + "]";
 	}
