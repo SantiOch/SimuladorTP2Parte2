@@ -44,4 +44,19 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 	
 		return jo;
 	}
+	
+	protected int getHervivores() {
+		
+		int n = 0;
+
+		for(Animal a: this.animalList) {
+			if(a.get_diet() == Diet.HERBIVORE) {
+				n++;
+			}
+		}
+		
+		return n;
+	}
 }
+
+

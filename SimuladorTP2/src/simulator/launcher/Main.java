@@ -141,15 +141,15 @@ public class Main {
 
 	private static void start(String[] args) throws Exception {
 		
-		init_factories();
-		parse_args(args);
-		switch (_mode) {
+		init_factories(); 
+		parse_args(args); 
+		switch (_mode) { 
 		case BATCH:
-			start_batch_mode();
+			start_batch_mode(); 
 			break;
 		case GUI:
-			start_GUI_mode();
-			break;
+			start_GUI_mode(); 
+			break; 
 		}
 	}
 

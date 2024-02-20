@@ -21,8 +21,7 @@ public class DynamicSupplyRegion extends Region{
 			return 0.0;
 		}
 		
-		//FIXME cambiar para que solo sean los hervívoros
-		int n = this.animalList.size();
+		int n = super.getHervivores();
 		
 		double food_returned = Math.min(_food, 60.0 * Math.exp(-Math.max(0, n - 5.0) * 2.0) * dt);
 		
@@ -34,7 +33,7 @@ public class DynamicSupplyRegion extends Region{
 	@Override
 	public void update(double dt) {
 		
-		// TODO incrementar con probabilidad de 0,5 la comida por dt *  this._factor
+		// Incrementar con probabilidad de 0,5 la comida por dt *  this._factor
 		// Creo que está bien, preguntar a Pablo, está bien (he preguntado)
 		
 		if(Utils._rand.nextBoolean()) this._food += dt * this._factor;

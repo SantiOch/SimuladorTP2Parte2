@@ -2,7 +2,6 @@ package simulator.model;
 
 public class DefaultRegion extends Region{
 	
-	
 	@Override
 	public double get_food(Animal a, double dt) {
 		
@@ -11,8 +10,7 @@ public class DefaultRegion extends Region{
 			return 0.0;
 		}
 		
-		//TODO cambiar para que solo sean los hervívoros
-		int n = this.animalList.size();
+		int n = super.getHervivores();
 		
 		return 60.0 * Math.exp(-Math.max(0, n-5.0) * 2.0) * dt;
 	}

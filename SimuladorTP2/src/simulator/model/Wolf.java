@@ -54,8 +54,12 @@ public class Wolf extends Animal{
 			break;
 		}
 
-		//TODO Ajustar la posicion si está fuera del mapa
+		//Ajustar posicion si está fuera del mapa
+		if(super.isOut()) {
+			this._pos = adjustPosition(this.get_position().getX(), this.get_position().getY());
+		}
 
+		
 		if(this._energy == 0.0 || this._age > 14.0) {
 			this._state = State.DEAD;
 		}
@@ -69,12 +73,18 @@ public class Wolf extends Animal{
 
 	private void updateMate(double dt) {
 
-		if(this._mate_target != null && (this._mate_target.get_state() == State.DEAD /* TODO || Está fuera del campo visual*/)) {
+		if(this._mate_target != null && (this._mate_target.get_state() == State.DEAD 
+				|| !(super.get_region_mngr().get_animals_in_range(this,
+						(Animal other) -> other == this._mate_target).contains(this._mate_target)))) {
+		
 			this._mate_target = null;
 		}
 
 		if(this._mate_target == null) {
-			// TODO Buscar nuevo mate target
+			//Busca a nuevo mate target
+			this._mate_target = this._mate_strategy.select(this,
+					this.get_region_mngr().get_animals_in_range(this, 
+							(Animal other) -> other.get_genetic_code() == this.get_genetic_code()));
 		}
 
 		if(this._mate_target == null) {
@@ -88,26 +98,26 @@ public class Wolf extends Animal{
 			if(this._pos.distanceTo(this._mate_target.get_position()) < 8.0) {
 				super.resetDesire();
 				this._mate_target.resetDesire();
-				
-				if(this._baby == null && Utils._rand.nextDouble() < 0.9) {
-					
-					this._baby = new Wolf(this, this._mate_target);
-					//TODO Crear nuevo bebé con probabilidad de 0.9, usando new Wolf(this, this._mate_target)
-				}
-				
-				this._energy -= 10;
-				this._mate_target = null;
-			}
 
-			//Actualiza estado si está con más de 50 de energía
-			if(this._energy < 50.0) {
-				this._state = State.HUNGER;
-				this._hunt_target = null;
-				this._mate_target = null;
-			}
-			if(this._desire < 65.0) {
-				this._state = State.NORMAL;
-				this._hunt_target = null;
+				if(this._baby == null && Utils._rand.nextDouble() < 0.9) {
+
+					//Crea un nuevo bebé con probabilidad de 0.9
+					this._baby = new Wolf(this, this._mate_target);
+
+					this._energy -= 10;
+					this._mate_target = null;
+				}
+
+				//Actualiza estado si está con más de 50 de energía
+				if(this._energy < 50.0) {
+					this._state = State.HUNGER;
+					this._hunt_target = null;
+					this._mate_target = null;
+				}
+				if(this._desire < 65.0) {
+					this._state = State.NORMAL;
+					this._hunt_target = null;
+				}
 			}
 		}
 	}
@@ -115,8 +125,12 @@ public class Wolf extends Animal{
 
 	private void updateHunger(double dt) {
 
-		if(this._hunt_target == null || this._hunt_target._state == State.DEAD /* TODO || está fuera del campo visual*/) {
-			//TODO Buscar nuevo animal para cazarlo
+		if(this._hunt_target == null || this._hunt_target._state == State.DEAD || !(super.get_region_mngr().get_animals_in_range(this,
+				(Animal other) ->other == this._hunt_target).contains(this._hunt_target))/*Está fuera del campo visual*/) {
+			
+			//Busca a un nuevo animal para cazarlo
+			this._hunt_target = this._hunting_strategy.select(this, this.get_region_mngr().get_animals_in_range(this,
+					(Animal other)-> other.get_genetic_code() != this.get_genetic_code()));
 		}
 
 		if(this._hunt_target == null) {

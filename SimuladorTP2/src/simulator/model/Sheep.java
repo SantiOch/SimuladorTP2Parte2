@@ -1,7 +1,5 @@
 package simulator.model;
 
-import java.util.function.Predicate;
-
 import simulator.misc.Utils;
 import simulator.misc.Vector2D;
 
@@ -10,12 +8,12 @@ public class Sheep extends Animal{
 	private static final String gcode = "Sheep";
 	private static final double sight_range = 40.0;
 	private static final double init_speed = 35.0;
-	
-	
+
+
 	private Animal _danger_source;
 	private SelectionStrategy _danger_strategy;
-	
-	
+
+
 	public Sheep(SelectionStrategy mate_strategy, SelectionStrategy danger_strategy,
 			Vector2D pos) {
 		super(gcode, Diet.HERBIVORE, sight_range, init_speed, mate_strategy, pos);
@@ -27,50 +25,53 @@ public class Sheep extends Animal{
 		this._danger_source = null;
 		this._danger_strategy = p1._danger_strategy;
 	}
-	
+
 	@Override
 	public void update(double dt) {
 
 		//Si está muerto
 		if(super.get_state() == State.DEAD) return;
-		
+
 		//Diferentes updates en función del estado
 		switch(super.get_state()) {
-			
-			case NORMAL:
-				
-				this.updateNormal(dt);
-				
-				break;
-			case DANGER:
-				
-				this.updateDanger(dt);
-				
-				break;
-			case MATE:
-				
-				this.updateMate(dt);
-				
-				break;
-			default:
-				
-				break;
+
+		case NORMAL:
+
+			this.updateNormal(dt);
+
+			break;
+		case DANGER:
+
+			this.updateDanger(dt);
+
+			break;
+		case MATE:
+
+			this.updateMate(dt);
+
+			break;
+		default:
+
+			break;
 		}
-		
-		//TODO Ajustar posicion si está fuera del mapa
-		
+
+		//Ajustar posicion si está fuera del mapa
+		if(super.isOut()) {
+			this._pos = adjustPosition(this.get_position().getX(), this.get_position().getY());
+		}
+
 		if(this._energy == 0.0 || this._age == 8.0) {
 			this._state = State.DEAD;
 		}
-		
+
 		if(this._state != State.DEAD) {
 			this._energy += this.get_region_mngr().get_food(this, dt);
 			if(this._energy < 0.0) this._energy = 0.0;
 			if(this._energy > 100.0) this._energy = 100.0;		
-			}
-		
+		}
+
 	}
-	
+
 	private void updateNormal(double dt) {
 
 		//Avanzar
@@ -81,7 +82,7 @@ public class Sheep extends Animal{
 
 			this._danger_source = 
 					this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
-							/*TODO cambiar con el filtro*/(Animal a) -> { return a.get_genetic_code() != this.get_genetic_code();}));
+							(Animal other) -> other.get_genetic_code() != this.get_genetic_code()));
 		}
 
 		if(this._danger_source != null) {
@@ -92,29 +93,31 @@ public class Sheep extends Animal{
 			this._danger_source = null;
 		}
 	}
-	
+
 	private void updateDanger(double dt) {
-		
+
 		//Danger source ha muerto
 		if(this._danger_source != null && this._danger_source.get_state() == State.DEAD) {
 			this._danger_source = null;
 		} 
-		
+
 		//Avanzar ya que danger source es nulo
 		if(this._danger_source == null) {
-			
+
 			this.advance(dt);
-		
+
 		}else {
-			
+
 			this._dest = this._pos.plus(this._pos.minus(_danger_source.get_position()).direction());
 			this.advanceRunning(dt);
-			
-			if(this._danger_source == null /* TODO || danger souce no está en el campo de visión*/) {
 
+			if(this._danger_source == null || !(super.get_region_mngr().get_animals_in_range(this,
+					(Animal other) -> other == this._danger_source).contains(this._danger_source))) {
+
+				//Busca un nuevo danger source
 				this._danger_source = 
 						this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
-								/*PREGUNTAR cambiar con el filtro*/ (Animal a) -> { return a.get_genetic_code() != this.get_genetic_code();}));
+								(Animal other) -> other.get_genetic_code() != this.get_genetic_code()));
 			}
 
 			//Comprobar otra vez ya que puede haver escogido un nuevo danger source
@@ -122,7 +125,7 @@ public class Sheep extends Animal{
 				if(this._desire > 65.0) {
 					this._state = State.MATE;
 					this._danger_source = null;
-				
+
 				}else {
 					this._state = State.NORMAL;
 					this._mate_target = null;
@@ -130,20 +133,22 @@ public class Sheep extends Animal{
 			}
 		}
 	}
-	
+
 	private void updateMate(double dt) {
-		
+
 		//Está muerto o no está en el campo de visión
 		if((this._mate_target != null 
 				&& this._mate_target.get_state() == State.DEAD)
 				|| !(super.get_region_mngr().get_animals_in_range(this,
-						(Animal a) -> { return a == this._mate_target; }).contains(this._mate_target))){
-			
+						(Animal other) ->other == this._mate_target).contains(this._mate_target))){
+
 			this._mate_target = null;
 		}
 
 		if(this._mate_target == null) {
-			//TODO Buscar otro animal para emparejarse
+			//Busca a otro animal para emparejarse con la estrategia que tenga
+			this._mate_target = this._mate_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
+					(Animal other) -> other.get_genetic_code() == this.get_genetic_code()));
 		}
 
 		//No ha conseguido encontrar otro animal para emparejarse
@@ -161,12 +166,12 @@ public class Sheep extends Animal{
 				this._mate_target.resetDesire();
 
 				if(this._baby == null && Utils._rand.nextDouble() < 0.9) {
-				
-					this._baby = new Sheep(this, this._mate_target);
+
 					//Crea un nuevo bebé con probabilidad de 0.9
-				
+					this._baby = new Sheep(this, this._mate_target);
+
 				}
-				
+
 				this._mate_target = null;
 			}
 		}
@@ -174,21 +179,22 @@ public class Sheep extends Animal{
 		if(this._danger_source == null) {
 
 			this._danger_source = 
-					this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,/*TODO cambiar con el filtro*/ null));		
+					this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
+							(Animal other) -> other.get_genetic_code() != this.get_genetic_code()));		
 		}
 
 		if(this._danger_source != null) {
-			
+
 			this._state = State.DANGER;
 			this._mate_target = null;
-			
+
 		}else if (this._desire < 65.0) {
-			
+
 			this._state = State.NORMAL;
 			this._danger_source = null;
 		}
 	}
-	
+
 	void advanceRunning(double dt) {
 		this.move(2 * super.get_speed() * dt * Math.exp((super.get_energy() - 100.0) * 0.007));
 		this._age += dt;
@@ -203,9 +209,9 @@ public class Sheep extends Animal{
 		if(this._desire < 0.0) this._desire = 0.0;
 		if(this._desire > 100.0) this._desire = 100.0;
 	}
-	
+
 	void advance(double dt) {
-		
+
 		if(super.get_position().distanceTo(super.get_destination()) < 8.0) {
 			this._dest = super.randomPos();
 		}

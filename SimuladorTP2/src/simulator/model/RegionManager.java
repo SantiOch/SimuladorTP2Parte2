@@ -1,12 +1,17 @@
 package simulator.model;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import simulator.misc.Vector2D;
 
 public class RegionManager implements AnimalMapView{
 
@@ -39,8 +44,7 @@ public class RegionManager implements AnimalMapView{
 				this._region[i][j] = new DefaultRegion();
 			}
 		}
-		
-		//TODO inicializar _animal_region , creo que debería ser HashMap
+
 		this._animal_region = new HashMap<>();
 	}
 	
@@ -74,41 +78,90 @@ public class RegionManager implements AnimalMapView{
 		return this._region_height;
 	}
 
+	//Devuelve una lista con los animales dentro del campo de visión y que además cumplen con la condición
 	@Override
 	public List<Animal> get_animals_in_range(Animal e, Predicate<Animal> filter) {
 		
-		List<Animal> listAux = new ArrayList<>();
+		//Nueva lista para almacenar los animales que ve y que cumplen la condición
+		List<Animal> listAux = new LinkedList<>();
+		
+		//Legibilidad
+		double range = e.get_sight_range();
+		double posX = e.get_position().getX();
+		double posY = e.get_position().getY();
+			
+		//Límites para las regiones que puede ver o no ver
+		double regMinWidth = posX - range;
+		double regMaxWidth = posX + range;
+		double regMinHeight = posY - range;
+		double regMaxHeight = posY + range;
+		
+		//Para que no haya regiones repetidas
+		Set<Region> auxRegList = new HashSet<>();
+		
+		//Añade la region actual en la que está, aunque creo que igual no hace falta, ya que lo hace en el for de abajo
+		auxRegList.add(regByPos(e.get_position()));
+		
+		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
+		for(double i = regMinWidth; i <= regMaxWidth; i += this._region_width) {
+			for(double j = regMinHeight; j <= regMaxHeight; j += this._region_height) {
+				Vector2D pos = new Vector2D(i, j);
+				auxRegList.add(regByPos(pos));
+			}
+		}
+		
+		for(Region r: auxRegList) {
+			for(Animal a: r.animalList) {
+				if(a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
+					listAux.add(a);
+				}
+			}
+		}
+		
+		//TODO Coger solo las regiones que están y hacer 2 forEach
+		//Cada forEach comprobar Animal a: a.get_position().distanceTo(e.get_position) < r && filter.test(a)
+		//listAux.add(a);
 		
 		/* Calcular que regiones toca o ve el animal con su campo de visión, pintar ejes centrados en el animal (Cruz),
-		 * con esos miro en que regiones toco, ver en cada una la lista de animales, ya que son candidatos a que me interesen
-		 * con cuales me quedo, con los que estén lo suficientemente cerca para verlos y que además cumplan el predicate,
-		 * y que la distancia a el animal es menor que r ( campo de visión), y que además cumpla el test
-		 * TODO Predicate con función lambda codigo genético del animal = sheep o wolf */
+		 * con esos miro en que regiones toco, ver en cada una la lista de animales, ya que son candidatos a que me interesen.
+		 * Con cuales me quedo, con los que estén lo suficientemente cerca para verlos y que además cumplan el predicate.
+		 * Osea que la distancia a el animal es menor que r ( campo de visión) y que cumplan el test */
 
 		return listAux;
 	}
 	
+	//Cambia la región que está en la posicion [row][col] por la región r, y cambia todos los animales que estaban en esa región a la nueva
 	void set_region(int row, int col, Region r) {
-		//TODO cambiar todos los animales que estaban antes en esa región a la nueva
+		
+		//Cambia todos los animales que estaban antes en esa región a la nueva
+		Region old = this._region[row][col];
+		
+		for(Animal a: r.animalList) {
+			this._animal_region.remove(a);
+			this._animal_region.put(a, r);
+		}
+		
+		r.animalList = old.animalList;
+		old.animalList = null;
 		
 		this._region[row][col] = r;
 	}
 	
 	void register_animal(Animal a) {
 		
-		//TODO encuentra la región a la que tiene que pertenecer el animal (a partir de su posición) y 
+		//Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición) y 
 		//lo añade a esa región y actualiza _animal_region.
 		
-		Region r = regByPos(a);
+		Region r = regByPos(a.get_position());
 		
 		a.init(this);
 
 		r.add_animal(a);
+		
+		this._animal_region.put(a, r);
 	}
 	
 	void unregister_animal(Animal a) {
-		
-		//TODO Creo que está bien así
 		
 		this._animal_region.get(a).remove_animal(a);
 		this._animal_region.remove(a);	
@@ -116,13 +169,13 @@ public class RegionManager implements AnimalMapView{
 	
 	void update_animal_region(Animal a) {
 		
-		//TODO Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición actual),
+		//Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición actual),
 		//y si es distinta de su región actual lo añade a la nueva región, 
 		//lo quita de la anterior, y actualiza _animal_region.
 		
 		Region act = this._animal_region.get(a);
 	
-		Region newReg = regByPos(a);
+		Region newReg = regByPos(a.get_position());
 		
 		if(act != newReg) {
 			
@@ -134,14 +187,13 @@ public class RegionManager implements AnimalMapView{
 		}
 	}
 
+	//Da comida al animal que la pide
 	@Override
-	public double get_food(Animal a, double dt) {
-		
-		//TODO Preguntar a Pablo
-		
+	public double get_food(Animal a, double dt) {		
 		return this._animal_region.get(a).get_food(a, dt);
 	}
 	
+	//Update de todas las regiones
 	void update_all_regions(double dt) {
 		for(Region[] ArrReg: this._region) {
 			for(Region Reg: ArrReg) {
@@ -150,19 +202,40 @@ public class RegionManager implements AnimalMapView{
 		}
 	}
 	
-	private Region regByPos(Animal a) {
+	//Devuelve la region a la que deberia pertenecer un animal por su posicion
+	private Region regByPos(Vector2D vect) {
 		
-		int regionI = (int) Math.floor((a.get_position().getX() / this._region_width)) ;
-		int regionJ = (int) Math.floor((a.get_position().getY() / this._region_height)) ;
+		int regionI = (int) Math.floor((vect.getX() / this._region_width)) ;
+		int regionJ = (int) Math.floor((vect.getY() / this._region_height)) ;
 		
 		return this._region[regionI][regionJ];
 	}
 
 	@Override
+	//Devuelve el JSON de todas las regiones
 	public JSONObject as_JSON() {
-		//TODO devolver json de todas las regiones
 		
-		return null;
+		//TODO preguntar a Pablo, creo que está bien
+		
+		JSONObject jo = new JSONObject();
+		JSONArray ja = new JSONArray();
+		
+		for(int i = 0; i < this._rows; i++) {
+			for(int j = 0; j < this._cols; j++) {
+				
+				JSONObject regionJSON = new JSONObject();
+				
+				regionJSON.put("row", i);
+				regionJSON.put("col", j);
+				regionJSON.put("data", this._region[i][j].as_JSON());
+				
+				ja.put(regionJSON);
+			}
+		}
+		
+		jo.put("regions", ja);
+		
+		return jo;
 	}
 	
 }

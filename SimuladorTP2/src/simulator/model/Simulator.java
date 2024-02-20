@@ -38,27 +38,75 @@ public class Simulator implements JSONable{
 	}
 	
 	//TODO Cambiar a private luego
-	public void set_region(int row, int col, Region r) {
-		//TODO
+	private void set_region(int row, int col, Region r) {
+		this._region_manager.set_region(row, col, r);
 	}
 	
 	public void set_region(int row, int col, JSONObject r_json) {
-		//TODO crear region y llamar a add_region
-
+		//Crear region y llamar a add_region
+		Region r;
+		
+		if(r_json.has("dynamic")) {
+			
+			JSONObject data = r_json.getJSONObject("data");
+			
+			double food = data.has("food") ? data.getDouble("food") : 1000.0;
+			double factor = data.has("factor") ? data.getDouble("factor") : 2.0;
+			
+			r = new DynamicSupplyRegion(food, factor);
+		}
+		else r = new DefaultRegion();
+	
+		this.set_region(row, col, r);
 	}
 	
-	//TODO Cambiar a private luego
-	public void add_animal(Animal a) {
-		//TODO
+	//Añade el animal a y lo registra en el region manager
+	private void add_animal(Animal a) {
+		this._animal_list.add(a);
+		this._region_manager.register_animal(a);
 	}
 	
 	public void add_animal(JSONObject a_json) {
+		
+		
 		//TODO crear animal y llamar a add_animal
-		Animal a;
-		if(a_json.get("type") == "wolf") {
-			//No se que estrategia coger
+			
+		//		 "spec" : {
+		//      "type" : "sheep",
+		//      "data" : {
+		//        "danger_strategy" : {
+		//          "type" : "youngest"
+		//        }
+		//      }
+		//    	}
+		
+		//		"type" : "wolf",
+		//    "data" : {
+		//      "mate_strategy" : {
+		//        "type" : "youngest"
+		//      },
+		//      "hunt_strategy" : {
+		//        "type" : "closest"
+		//      }
+		//    }
+		
+		SelectionStrategy mate;
+		SelectionStrategy hunt_danger;
+
+		JSONObject data = a_json.getJSONObject("data");
+		
+		if(data.has("mate_strategy")){
+			
 		}
 		
+//		Animal a = new Animal();
+		if(a_json.get("type") == "wolf") {
+			if(a_json.has("selectionStrategy")) {
+				
+			}
+			//No se que estrategia coger, lo pone en el json, si no, coger selectFirst
+		}
+//		this.add_animal(a);
 	}
 	
 	public MapInfo get_map_info() {
@@ -74,10 +122,37 @@ public class Simulator implements JSONable{
 	}
 	
 	public void advance(double dt) {
-		//TODO llamar al update de todo, incrementar tiempo etc. 
+		
+		this._time += dt;
+		
+		List<Animal> dead = new LinkedList<>();;
+		
+		for(Animal a: this._animal_list) {
+		
+			a.update(dt);
+			this._region_manager.update_animal_region(a);
+			
+			if(a._state == State.DEAD) {
+				
+				dead.add(a);
+				this._region_manager.unregister_animal(a);
+			}
+			
+			if(a.is_pregnant()) {
+				this.add_animal(a.deliver_baby());
+			}
+		}
+		this._animal_list.removeAll(dead);
+		
 	}
 	
+	@Override
 	public JSONObject as_JSON() {
-		return null;
+		JSONObject jo = new JSONObject();
+		
+		jo.put("time", this._time);
+		jo.put("state", this._region_manager.as_JSON());
+		
+		return jo;
 	}
 }
