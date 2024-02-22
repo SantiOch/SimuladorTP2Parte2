@@ -4,9 +4,8 @@ import org.json.JSONObject;
 
 public class WolfBuilder<T> extends Builder<T> {
 
-	public WolfBuilder(String type_tag, String desc) {
-		super(type_tag, desc);
-		// TODO Auto-generated constructor stub
+	public WolfBuilder() {
+		super("wolf", "wolf builder");
 	}
 
 	@Override

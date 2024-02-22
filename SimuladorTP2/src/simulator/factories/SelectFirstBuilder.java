@@ -5,7 +5,7 @@ import org.json.JSONObject;
 public class SelectFirstBuilder<T> extends Builder<T> {
 
 	public SelectFirstBuilder() {
-		super("first", "");
+		super("first", "select first builder");
 	}
 
 	@Override

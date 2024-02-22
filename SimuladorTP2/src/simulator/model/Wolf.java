@@ -59,7 +59,6 @@ public class Wolf extends Animal{
 			this._pos = adjustPosition(this.get_position().getX(), this.get_position().getY());
 		}
 
-		
 		if(this._energy == 0.0 || this._age > 14.0) {
 			this._state = State.DEAD;
 		}
@@ -73,9 +72,9 @@ public class Wolf extends Animal{
 
 	private void updateMate(double dt) {
 
-		if(this._mate_target != null && (this._mate_target.get_state() == State.DEAD 
-				|| !(super.get_region_mngr().get_animals_in_range(this,
-						(Animal other) -> other == this._mate_target).contains(this._mate_target)))) {
+		if(this._mate_target != null 
+				|| this._mate_target.get_state() == State.DEAD 
+				|| this._mate_target.get_position().distanceTo(this._pos) > this.get_sight_range()) {
 		
 			this._mate_target = null;
 		}
@@ -125,16 +124,19 @@ public class Wolf extends Animal{
 
 	private void updateHunger(double dt) {
 
-		if(this._hunt_target == null || this._hunt_target._state == State.DEAD || !(super.get_region_mngr().get_animals_in_range(this,
-				(Animal other) ->other == this._hunt_target).contains(this._hunt_target))/*Está fuera del campo visual*/) {
+		if(this._hunt_target == null //No tiene hunt target
+				|| this._hunt_target._state == State.DEAD //Ha muerto
+				|| this._hunt_target.get_position().distanceTo(this._pos) > this.get_sight_range()/*Está fuera del campo visual*/) {
 			
 			//Busca a un nuevo animal para cazarlo
 			this._hunt_target = this._hunting_strategy.select(this, this.get_region_mngr().get_animals_in_range(this,
-					(Animal other)-> other.get_genetic_code() != this.get_genetic_code()));
+					(Animal other)-> other.get_diet() == Diet.HERBIVORE));
 		}
 
 		if(this._hunt_target == null) {
+			
 			this.advance(dt);
+			
 		}else {
 
 			this._dest = this._hunt_target.get_position();

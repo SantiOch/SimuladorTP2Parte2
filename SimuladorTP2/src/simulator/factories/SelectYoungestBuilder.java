@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 public class SelectYoungestBuilder<T> extends Builder<T> {
 
-	public SelectYoungestBuilder(String type_tag, String desc) {
-		super(type_tag, desc);
+	public SelectYoungestBuilder() {
+		super("youngest", "select youngest builder");
 		// TODO Auto-generated constructor stub
 	}
 

@@ -37,7 +37,6 @@ public class Simulator implements JSONable{
 		this._time = 0.0;
 	}
 	
-	//TODO Cambiar a private luego
 	private void set_region(int row, int col, Region r) {
 		this._region_manager.set_region(row, col, r);
 	}

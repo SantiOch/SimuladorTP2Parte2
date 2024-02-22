@@ -4,9 +4,8 @@ import org.json.JSONObject;
 
 public class SelectClosestBuilder<T> extends Builder<T> {
 
-	public SelectClosestBuilder(String type_tag, String desc) {
-		super(type_tag, desc);
-		// TODO Auto-generated constructor stub
+	public SelectClosestBuilder() {
+		super("closest", "select closest builder");
 	}
 
 	@Override

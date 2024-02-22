@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 public class DynamicSupplyRegionBuilder<T> extends Builder<T> {
 
-	public DynamicSupplyRegionBuilder(String type_tag, String desc) {
-		super(type_tag, desc);
+	public DynamicSupplyRegionBuilder() {
+		super("dynamic", "dynamic supply region builder");
 		// TODO Auto-generated constructor stub
 	}
 

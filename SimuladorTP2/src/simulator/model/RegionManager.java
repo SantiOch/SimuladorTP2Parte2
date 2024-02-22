@@ -91,29 +91,20 @@ public class RegionManager implements AnimalMapView{
 		double posY = e.get_position().getY();
 			
 		//Límites para las regiones que puede ver o no ver
-		double regMinWidth = posX - range;
-		double regMaxWidth = posX + range;
-		double regMinHeight = posY - range;
-		double regMaxHeight = posY + range;
+		int regMinWidthIndex = (int) ((posX - range) / this._region_width);
+		int regMaxWidthIndex = (int) ((posX + range) / this._region_width);
+		int regMinHeightIndex = (int) ((posY - range) / this._region_height);
+		int regMaxHeightIndex = (int) ((posY + range) / this._region_height);
 		
-		//Para que no haya regiones repetidas
-		Set<Region> auxRegList = new HashSet<>();
-		
-		//Añade la region actual en la que está, aunque creo que igual no hace falta, ya que lo hace en el for de abajo
-		auxRegList.add(regByPos(e.get_position()));
+		//TODO Ver que no se salgan del mapa
 		
 		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
-		for(double i = regMinWidth; i <= regMaxWidth; i += this._region_width) {
-			for(double j = regMinHeight; j <= regMaxHeight; j += this._region_height) {
-				Vector2D pos = new Vector2D(i, j);
-				auxRegList.add(regByPos(pos));
-			}
-		}
-		
-		for(Region r: auxRegList) {
-			for(Animal a: r.animalList) {
-				if(a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
-					listAux.add(a);
+		for(int i = regMinWidthIndex; i <= regMaxWidthIndex; i++) {
+			for(int j = regMinHeightIndex; j <= regMaxHeightIndex; j++) {
+				for(Animal a: this._region[i][j].animalList) {
+					if(a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
+						listAux.add(a);
+					}
 				}
 			}
 		}
@@ -205,8 +196,8 @@ public class RegionManager implements AnimalMapView{
 	//Devuelve la region a la que deberia pertenecer un animal por su posicion
 	private Region regByPos(Vector2D vect) {
 		
-		int regionI = (int) Math.floor((vect.getX() / this._region_width)) ;
-		int regionJ = (int) Math.floor((vect.getY() / this._region_height)) ;
+		int regionI = (int) (vect.getX() / this._region_width);
+		int regionJ = (int) (vect.getY() / this._region_height);
 		
 		return this._region[regionI][regionJ];
 	}

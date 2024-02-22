@@ -82,7 +82,7 @@ public class Sheep extends Animal{
 
 			this._danger_source = 
 					this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
-							(Animal other) -> other.get_genetic_code() != this.get_genetic_code()));
+							(Animal other) -> other.get_diet() == Diet.CARNIVORE));
 		}
 
 		if(this._danger_source != null) {
@@ -111,13 +111,12 @@ public class Sheep extends Animal{
 			this._dest = this._pos.plus(this._pos.minus(_danger_source.get_position()).direction());
 			this.advanceRunning(dt);
 
-			if(this._danger_source == null || !(super.get_region_mngr().get_animals_in_range(this,
-					(Animal other) -> other == this._danger_source).contains(this._danger_source))) {
+			if(this._danger_source == null || this._danger_source.get_position().distanceTo(this._pos) > this.get_sight_range()) {
 
 				//Busca un nuevo danger source
 				this._danger_source = 
 						this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
-								(Animal other) -> other.get_genetic_code() != this.get_genetic_code()));
+								(Animal other) -> other.get_diet() == Diet.CARNIVORE));
 			}
 
 			//Comprobar otra vez ya que puede haver escogido un nuevo danger source
@@ -137,10 +136,8 @@ public class Sheep extends Animal{
 	private void updateMate(double dt) {
 
 		//Está muerto o no está en el campo de visión
-		if((this._mate_target != null 
-				&& this._mate_target.get_state() == State.DEAD)
-				|| !(super.get_region_mngr().get_animals_in_range(this,
-						(Animal other) ->other == this._mate_target).contains(this._mate_target))){
+		if((this._mate_target != null && this._mate_target.get_state() == State.DEAD)
+				|| (this._mate_target != null && this._mate_target.get_position().distanceTo(this._pos) > this.get_sight_range())){
 
 			this._mate_target = null;
 		}
@@ -180,7 +177,7 @@ public class Sheep extends Animal{
 
 			this._danger_source = 
 					this._danger_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
-							(Animal other) -> other.get_genetic_code() != this.get_genetic_code()));		
+							(Animal other) -> other.get_diet() == Diet.CARNIVORE));		
 		}
 
 		if(this._danger_source != null) {
