@@ -27,6 +27,7 @@ public abstract class Builder<T> {
 		info.put("data", data);
 		return info;
 	}
+	
 	protected void fill_in_data(JSONObject o) {
 	}
 
@@ -35,5 +36,6 @@ public abstract class Builder<T> {
 		
 		return _desc;
 	}
+	
 	protected abstract T create_instance(JSONObject data);
 }
