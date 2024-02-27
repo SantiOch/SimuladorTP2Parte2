@@ -83,12 +83,12 @@ public class RegionManager implements AnimalMapView{
 	public List<Animal> get_animals_in_range(Animal e, Predicate<Animal> filter) {
 		
 		//Nueva lista para almacenar los animales que ve y que cumplen la condición
-		List<Animal> listAux = new LinkedList<>();
+		List<Animal> listAux = new LinkedList<Animal>();
 		
 		//Legibilidad
 		double range = e.get_sight_range();
-		double posX = e.get_position().getX();
-		double posY = e.get_position().getY();
+		double posX = e.get_position().getY();
+		double posY = e.get_position().getX();
 			
 		//Límites para las regiones que puede ver o no ver
 		int regMinWidthIndex = (int) ((posX - range) / this._region_width);
@@ -96,11 +96,15 @@ public class RegionManager implements AnimalMapView{
 		int regMinHeightIndex = (int) ((posY - range) / this._region_height);
 		int regMaxHeightIndex = (int) ((posY + range) / this._region_height);
 		
-		//TODO Ver que no se salgan del mapa
+		//Ver que no se salgan del mapa, si se salen, se establecen en los límites
+		regMinWidthIndex = regMinWidthIndex < 0 ? 0: regMinWidthIndex;
+		regMaxWidthIndex = regMaxWidthIndex > this._cols ? this._cols - 1: regMaxWidthIndex;
+		regMinHeightIndex = regMinHeightIndex < 0 ? 0: regMinHeightIndex;
+		regMaxHeightIndex = regMaxHeightIndex > this._rows ? this._rows - 1: regMaxHeightIndex;
 		
 		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
-		for(int i = regMinWidthIndex; i <= regMaxWidthIndex; i++) {
-			for(int j = regMinHeightIndex; j <= regMaxHeightIndex; j++) {
+		for(int i = regMinHeightIndex; i < regMaxHeightIndex; i++) {
+			for(int j = regMinWidthIndex; j < regMaxWidthIndex; j++) {
 				for(Animal a: this._region[i][j].animalList) {
 					if(a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
 						listAux.add(a);
@@ -142,10 +146,10 @@ public class RegionManager implements AnimalMapView{
 		
 		//Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición) y 
 		//lo añade a esa región y actualiza _animal_region.
-		
+		a.init(this);
+				
 		Region r = regByPos(a.get_position());
 		
-		a.init(this);
 
 		r.add_animal(a);
 		
@@ -165,7 +169,6 @@ public class RegionManager implements AnimalMapView{
 		//lo quita de la anterior, y actualiza _animal_region.
 		
 		Region act = this._animal_region.get(a);
-	
 		Region newReg = regByPos(a.get_position());
 		
 		if(act != newReg) {
@@ -196,8 +199,11 @@ public class RegionManager implements AnimalMapView{
 	//Devuelve la region a la que deberia pertenecer un animal por su posicion
 	private Region regByPos(Vector2D vect) {
 		
-		int regionI = (int) (vect.getX() / this._region_width);
-		int regionJ = (int) (vect.getY() / this._region_height);
+		int regionI = (int) (vect.getY() / this._region_width);
+		int regionJ = (int) (vect.getX() / this._region_height);
+		
+		regionI = regionI > 0? regionI - 1: regionI;
+		regionJ = regionJ > 0? regionJ - 1: regionJ;
 		
 		return this._region[regionI][regionJ];
 	}

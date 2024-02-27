@@ -13,15 +13,16 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 	private List<JSONObject> _builders_info;
 
 	public BuilderBasedFactory() {
-	
+
 		this._builders = new HashMap<String, Builder<T>>();
 		this._builders_info = new LinkedList<JSONObject>();
 		//Create a HashMap for _builders, and a LinkedList _builders_info // ...
+		
 	}
 	public BuilderBasedFactory(List<Builder<T>> builders) {
 
 		this();
-
+ 
 		for(Builder<T> b: builders) {
 			this.add_builder(b);
 		}
@@ -36,25 +37,26 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 		//add b.get_info() to _buildersInfo
 		//...
 	}
-	
+
 	@Override
 	public T create_instance(JSONObject info) {
 		if (info == null) {
 			throw new IllegalArgumentException("’info’ cannot be null");
 		}
-		
+
 		Builder<T> b = this._builders.get(info.getString("type"));
-		
-		T instance;
-		
+
+		T instance = null;
+
 		if(b != null) {
-		
+
 			instance = b.create_instance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
-		
-		}else {
-		
-			throw new IllegalArgumentException("Unrecognized ‘info’:" + info.toString());
+
 		}
+
+		if(b == null || instance == null)
+			throw new IllegalArgumentException("Unrecognized ‘info’:" + info.toString());
+
 		return instance;
 		// Look for a builder with a tag equals to info.getString("type"), in the
 		//  map _builder, and call its create_instance method and return the result
@@ -68,4 +70,5 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 	@Override
 	public List<JSONObject> get_info() {
 		return Collections.unmodifiableList(_builders_info);
-	} }
+	} 
+}

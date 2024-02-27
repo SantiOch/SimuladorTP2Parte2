@@ -2,16 +2,17 @@ package simulator.factories;
 
 import org.json.JSONObject;
 
-public class SelectFirstBuilder<T> extends Builder<T> {
+import simulator.model.SelectFirst;
+import simulator.model.SelectionStrategy;
+
+public class SelectFirstBuilder extends Builder<SelectionStrategy> {
 
 	public SelectFirstBuilder() {
 		super("first", "select first builder");
 	}
 
 	@Override
-	protected T create_instance(JSONObject data) {
-		// TODO Auto-generated method stub
-		return null;
+	protected SelectionStrategy create_instance(JSONObject data) {
+		return new SelectFirst();
 	}
-
 }

@@ -14,20 +14,11 @@ public class Simulator implements JSONable{
 	private Factory<Animal> _animals_factory;
 	private Factory<Region> _regions_factory;
 	
-//	private int _cols;
-//	private int _rows;
-//	private int _width;
-//	private int _height;
-	
 	private RegionManager _region_manager;
 	private List<Animal> _animal_list;
 	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory, Factory<Region> regions_factory) {
-//		this._cols = cols;
-//		this._rows = rows;
-//		this._width = width;
-//		this._height = height;
 		
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;		
@@ -42,19 +33,9 @@ public class Simulator implements JSONable{
 	}
 	
 	public void set_region(int row, int col, JSONObject r_json) {
-		//Crear region y llamar a add_region
-		Region r;
 		
-		if(r_json.has("dynamic")) {
-			
-			JSONObject data = r_json.getJSONObject("data");
-			
-			double food = data.has("food") ? data.getDouble("food") : 1000.0;
-			double factor = data.has("factor") ? data.getDouble("factor") : 2.0;
-			
-			r = new DynamicSupplyRegion(food, factor);
-		}
-		else r = new DefaultRegion();
+		//Crear region y llamar a add_region
+		Region r = this._regions_factory.create_instance(r_json);
 	
 		this.set_region(row, col, r);
 	}
@@ -67,45 +48,9 @@ public class Simulator implements JSONable{
 	
 	public void add_animal(JSONObject a_json) {
 		
-		
-		//TODO crear animal y llamar a add_animal
-			
-		//		 "spec" : {
-		//      "type" : "sheep",
-		//      "data" : {
-		//        "danger_strategy" : {
-		//          "type" : "youngest"
-		//        }
-		//      }
-		//    	}
-		
-		//		"type" : "wolf",
-		//    "data" : {
-		//      "mate_strategy" : {
-		//        "type" : "youngest"
-		//      },
-		//      "hunt_strategy" : {
-		//        "type" : "closest"
-		//      }
-		//    }
-		
-		SelectionStrategy mate;
-		SelectionStrategy hunt_danger;
+		Animal a = this._animals_factory.create_instance(a_json);
 
-		JSONObject data = a_json.getJSONObject("data");
-		
-		if(data.has("mate_strategy")){
-			
-		}
-		
-//		Animal a = new Animal();
-		if(a_json.get("type") == "wolf") {
-			if(a_json.has("selectionStrategy")) {
-				
-			}
-			//No se que estrategia coger, lo pone en el json, si no, coger selectFirst
-		}
-//		this.add_animal(a);
+		this.add_animal(a);
 	}
 	
 	public MapInfo get_map_info() {
@@ -124,7 +69,8 @@ public class Simulator implements JSONable{
 		
 		this._time += dt;
 		
-		List<Animal> dead = new LinkedList<>();;
+		List<Animal> deadAnimals = new LinkedList<>();
+		List<Animal> newBornAnimals = new LinkedList<>();
 		
 		for(Animal a: this._animal_list) {
 		
@@ -133,15 +79,20 @@ public class Simulator implements JSONable{
 			
 			if(a._state == State.DEAD) {
 				
-				dead.add(a);
+				deadAnimals.add(a);
 				this._region_manager.unregister_animal(a);
 			}
 			
 			if(a.is_pregnant()) {
-				this.add_animal(a.deliver_baby());
+				newBornAnimals.add(a.deliver_baby());
 			}
 		}
-		this._animal_list.removeAll(dead);
+		for(Animal a: newBornAnimals) {
+			this.add_animal(a);
+		}
+		
+		this._region_manager.update_all_regions(dt);
+		this._animal_list.removeAll(deadAnimals);
 		
 	}
 	

@@ -15,5 +15,16 @@
       "type" : "wolf",
       "data" : { }
     }
+  } ],
+  "regions" : [ {
+    "row" : [ 7, 7 ],
+    "col" : [ 0, 19 ],
+    "spec" : {
+      "type" : "dynamic",
+      "data" : {
+        "food" : 1000.0,
+        "factor" : 100
+      }
+    }
   } ]
 }

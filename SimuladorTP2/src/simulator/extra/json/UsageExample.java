@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 
 import org.json.*;
 
+import simulator.misc.Utils;
+
 public class UsageExample {
 
 	/**
@@ -44,6 +46,43 @@ public class UsageExample {
 		else
 			System.out.println("It does not have a key 'bla'!!");
 
+		
+		System.out.println("----------------------------------");
+
+		if(jo.has("data")) {
+			
+			JSONObject job  = jo.getJSONObject("data");
+			System.out.println("jdskjfklsjdflksjdlfkjsdljfañdlkfjsdkjlhfdgljbvmnxzc");
+			if(job.has("pos")) {
+				System.out.println();
+			}
+			
+//			JSONArray x = job.getJSONArray("x_range");
+//			JSONArray y = job.getJSONArray("y_range");
+//			
+//			if(x.length() != 2 || y.length() != 2) {
+//				throw new IllegalArgumentException("Wrong number of parameters in x/y range");
+//			}
+//			//TODO ver lo de las posiciones aleatorias
+//			double minX = x.getDouble(0);
+//			double maxX = x.getDouble(1);
+//			double minY = y.getDouble(0);
+//			double maxY= y.getDouble(1);
+//			
+//			System.out.println(maxY);
+//			
+//			double posX, posY;
+//			
+//			posX = Utils._rand.nextDouble(minX, maxX);
+//			posY = Utils._rand.nextDouble(minY, maxY);
+//			
+//			System.out.println(posX);
+//			System.out.println(posY);
+
+			
+		}
+		
+		System.out.println("----------------------------------");
 
 		// Accessing the value of a key of a known type, already converted to a specific
 		// type (it simple uses casting!). It throws an exception if the type does not
@@ -86,6 +125,8 @@ public class UsageExample {
 		for (String key : jo2.keySet()) {
 			System.out.println("-> " + key);
 		}
+		
+		
 
 	}
 
@@ -157,7 +198,7 @@ public class UsageExample {
 
 		// Example 1: Parse JSON from a string or from a file
 		//
-
+		try {
 		// build a JSONObject from a string
 		String jsonString = "{ \"a\": 1234, \"b\": 2e-10, \"c\": \"Hola!\", \"d\": [1,2,3], \"e\": { \"k\" : 123,  \"h\" : \"Helloooo!\", \"f\": 23.3e-10 }}";
 		JSONObject joFromString = new JSONObject(jsonString);
@@ -198,6 +239,9 @@ public class UsageExample {
 		// Example 3: remove a key
 		//
 		removeKey(joFromFile1, "e");
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 }

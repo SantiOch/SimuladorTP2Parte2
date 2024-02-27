@@ -31,9 +31,8 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 	protected Animal(String genetic_code, Diet diet, double sight_range,
 			double init_speed, SelectionStrategy mate_strategy, Vector2D pos){
-
 		//FIXME Lanzar excepciones
-		if(genetic_code == null || (genetic_code != "sheep" && genetic_code != "wolf" || diet == null || mate_strategy == null)){
+		if(genetic_code == null || (genetic_code != "Sheep" && genetic_code != "Wolf") || diet == null || mate_strategy == null){
 			throw new IllegalArgumentException("Invalid genetic_code/diet/mate_strategy");
 		}
 		
@@ -81,17 +80,6 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range()+p2.get_sight_range())/2, 0.2);
 		this._speed = Utils.get_randomized_parameter((p1.get_speed()+p2.get_speed())/2, 0.2);
 
-	}
-
-	//Selecciona una posicion aleatoria dentro del mapa
-	protected Vector2D randomPos() {
-
-		double x = Utils._rand.nextDouble(this._region_mngr.get_width()); 
-		double y = Utils._rand.nextDouble(this._region_mngr.get_height()); 
-
-		Vector2D v = new Vector2D(x, y);
-
-		return v;
 	}
 
 	public AnimalMapView get_region_mngr() {
@@ -158,6 +146,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 		//Elegir posicion aleatoria si la posicion es null y si no ajustarla para que esté dentro
 		if(this._pos == null) {
+
 			this._pos = randomPos();
 		}else this._pos = adjustPosition(this._pos.getX(), this._pos.getY());
 
@@ -189,6 +178,16 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 	}
 
+	protected Vector2D randomPos() {
+
+		double x = Utils._rand.nextDouble(this._region_mngr.get_width()); 
+		double y = Utils._rand.nextDouble(this._region_mngr.get_height()); 
+
+		Vector2D v = new Vector2D(x, y);
+
+		return v;
+	}
+	
 	protected void move(double speed) {
 
 		this._pos = _pos.plus(_dest.minus(_pos).direction().scale(speed));

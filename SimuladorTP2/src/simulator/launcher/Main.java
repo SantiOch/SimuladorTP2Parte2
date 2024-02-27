@@ -1,8 +1,15 @@
 package simulator.launcher;
 
+import simulator.model.*;
+import simulator.factories.*;
+import simulator.control.*;
+import simulator.factories.Factory;
+
+import java.util.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -14,8 +21,12 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import simulator.misc.Utils;
+//import simulator.view.SimpleObjectViewer;
 
 public class Main {
+
+	private static Factory<Region> reg_factory;
+	private static Factory<Animal> ani_factory;
 
 	private enum ExecMode {
 		BATCH("batch", "Batch mode"), GUI("gui", "Graphical User Interface mode");
@@ -124,6 +135,32 @@ public class Main {
 	}
 
 	private static void init_factories() {
+
+		//TODO Completar el método init_factories para inicializar las factorías y almacenarlas en los atributos correspondientes.
+
+		List<Builder<SelectionStrategy>> selection_strategy_builders = new ArrayList<>();
+
+		selection_strategy_builders.add(new SelectFirstBuilder());
+		selection_strategy_builders.add(new SelectClosestBuilder()); 
+		selection_strategy_builders.add(new SelectFirstBuilder()); 
+
+		Factory<SelectionStrategy> selection_strategy_factory =
+				new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
+		
+		List<Builder<Animal>> animal_builders = new ArrayList<>();
+
+		animal_builders.add(new WolfBuilder(selection_strategy_factory));
+		animal_builders.add(new SheepBuilder(selection_strategy_factory));
+		
+		ani_factory = new BuilderBasedFactory<Animal>(animal_builders);
+		
+		List<Builder<Region>> region_builders = new ArrayList<>();
+
+		region_builders.add(new DefaultRegionBuilder());
+		region_builders.add(new DynamicSupplyRegionBuilder());
+		
+		reg_factory = new BuilderBasedFactory<Region>(region_builders);
+
 	}
 
 	private static JSONObject load_JSON_file(InputStream in) {
@@ -132,7 +169,29 @@ public class Main {
 
 
 	private static void start_batch_mode() throws Exception {
+		
 		InputStream is = new FileInputStream(new File(_in_file));
+		OutputStream os = null;
+
+		JSONObject jo = load_JSON_file(is);
+
+		Simulator sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), ani_factory, reg_factory);
+		Controller con = new Controller(sim);
+		
+		con.load_data(jo);
+
+		con.run(_time, 0.03, true, os);
+
+		os.close();
+		/*Completar el método start_batch_mode para que haga lo siguiente 
+		 * (1) cargar el archivo de entrada en un JSONObject; 
+		 * (2) crear el archivo de salida; 
+		 * (3) crear una instancia de Simulator pasando a su constructora la información que necesita; 
+		 * (4) crear una instancia de Controller pasandole el simulador; 
+		 * (5) llamar a load_data pasandole el JSONObject de la entrada; y 
+		 * (6) llamar al método run con los parámetros correspondents; y 
+		 * (7) cerrar el archivo de salida.
+		 * */
 	}
 
 	private static void start_GUI_mode() throws Exception {
@@ -140,7 +199,7 @@ public class Main {
 	}
 
 	private static void start(String[] args) throws Exception {
-		
+
 		init_factories(); 
 		parse_args(args); 
 		switch (_mode) { 
@@ -155,6 +214,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Utils._rand.setSeed(2147483647l);
+
 		try {
 			start(args);
 		} catch (Exception e) {

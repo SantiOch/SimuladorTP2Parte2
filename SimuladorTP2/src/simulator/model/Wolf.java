@@ -73,8 +73,8 @@ public class Wolf extends Animal{
 	private void updateMate(double dt) {
 
 		if(this._mate_target != null 
-				|| this._mate_target.get_state() == State.DEAD 
-				|| this._mate_target.get_position().distanceTo(this._pos) > this.get_sight_range()) {
+				&& this._mate_target.get_state() == State.DEAD 
+				|| this._mate_target != null  && this._mate_target.get_position().distanceTo(this._pos) > this.get_sight_range()) {
 		
 			this._mate_target = null;
 		}

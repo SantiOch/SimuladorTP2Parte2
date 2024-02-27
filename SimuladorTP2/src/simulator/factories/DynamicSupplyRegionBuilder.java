@@ -2,17 +2,25 @@ package simulator.factories;
 
 import org.json.JSONObject;
 
-public class DynamicSupplyRegionBuilder<T> extends Builder<T> {
+import simulator.model.DynamicSupplyRegion;
+import simulator.model.Region;
+
+public class DynamicSupplyRegionBuilder extends Builder<Region> {
 
 	public DynamicSupplyRegionBuilder() {
 		super("dynamic", "dynamic supply region builder");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected T create_instance(JSONObject data) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	protected Region create_instance(JSONObject data) {
+		
+		double food = 1000.0;
+		double factor = 2.0;
+		
+		if(data.has("factor")) factor = data.getDouble("factor");
 
+		if(data.has("food")) food = data.getDouble("food");
+		
+		return new DynamicSupplyRegion(food, factor);
+	}
 }
