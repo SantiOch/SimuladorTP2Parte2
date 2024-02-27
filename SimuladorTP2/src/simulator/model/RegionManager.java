@@ -87,8 +87,8 @@ public class RegionManager implements AnimalMapView{
 		
 		//Legibilidad
 		double range = e.get_sight_range();
-		double posX = e.get_position().getY();
-		double posY = e.get_position().getX();
+		double posX = e.get_position().getX();
+		double posY = e.get_position().getY();
 			
 		//Límites para las regiones que puede ver o no ver
 		int regMinWidthIndex = (int) ((posX - range) / this._region_width);
@@ -98,15 +98,15 @@ public class RegionManager implements AnimalMapView{
 		
 		//Ver que no se salgan del mapa, si se salen, se establecen en los límites
 		regMinWidthIndex = regMinWidthIndex < 0 ? 0: regMinWidthIndex;
-		regMaxWidthIndex = regMaxWidthIndex > this._cols ? this._cols - 1: regMaxWidthIndex;
+		regMaxWidthIndex = regMaxWidthIndex > this._cols ? this._cols: regMaxWidthIndex;
 		regMinHeightIndex = regMinHeightIndex < 0 ? 0: regMinHeightIndex;
-		regMaxHeightIndex = regMaxHeightIndex > this._rows ? this._rows - 1: regMaxHeightIndex;
+		regMaxHeightIndex = regMaxHeightIndex > this._rows ? this._rows: regMaxHeightIndex;
 		
 		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
 		for(int i = regMinHeightIndex; i < regMaxHeightIndex; i++) {
 			for(int j = regMinWidthIndex; j < regMaxWidthIndex; j++) {
 				for(Animal a: this._region[i][j].animalList) {
-					if(a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
+					if(a != e && a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
 						listAux.add(a);
 					}
 				}
@@ -199,8 +199,8 @@ public class RegionManager implements AnimalMapView{
 	//Devuelve la region a la que deberia pertenecer un animal por su posicion
 	private Region regByPos(Vector2D vect) {
 		
-		int regionI = (int) (vect.getY() / this._region_width);
-		int regionJ = (int) (vect.getX() / this._region_height);
+		int regionJ = (int) (vect.getX() / this._region_width);
+		int regionI = (int) (vect.getY() / this._region_height);
 		
 		regionI = regionI > 0? regionI - 1: regionI;
 		regionJ = regionJ > 0? regionJ - 1: regionJ;
@@ -222,8 +222,9 @@ public class RegionManager implements AnimalMapView{
 				
 				JSONObject regionJSON = new JSONObject();
 				
-				regionJSON.put("row", i);
-				regionJSON.put("col", j);
+				regionJSON.put("row", i + 1);
+				regionJSON.put("col", j + 1);
+				
 				regionJSON.put("data", this._region[i][j].as_JSON());
 				
 				ja.put(regionJSON);

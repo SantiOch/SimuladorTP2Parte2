@@ -72,18 +72,16 @@ public class Wolf extends Animal{
 
 	private void updateMate(double dt) {
 
-		if(this._mate_target != null 
-				&& this._mate_target.get_state() == State.DEAD 
-				|| this._mate_target != null  && this._mate_target.get_position().distanceTo(this._pos) > this.get_sight_range()) {
-		
+		if((this._mate_target != null 
+				&& this._mate_target.get_state() == State.DEAD )
+				|| (this._mate_target != null  && this._mate_target.get_position().distanceTo(this._pos) > this.get_sight_range())) {
 			this._mate_target = null;
 		}
 
 		if(this._mate_target == null) {
-			//Busca a nuevo mate target
-			this._mate_target = this._mate_strategy.select(this,
-					this.get_region_mngr().get_animals_in_range(this, 
-							(Animal other) -> other.get_genetic_code() == this.get_genetic_code()));
+			//Busca a otro animal para emparejarse con la estrategia que tenga
+			this._mate_target = this._mate_strategy.select(this, super.get_region_mngr().get_animals_in_range(this,
+					(Animal other) -> other.get_genetic_code() == this.get_genetic_code()));
 		}
 
 		if(this._mate_target == null) {
@@ -104,9 +102,10 @@ public class Wolf extends Animal{
 					this._baby = new Wolf(this, this._mate_target);
 
 					this._energy -= 10;
-					this._mate_target = null;
+					
 				}
-
+				this._mate_target.resetTarget();
+				this._mate_target = null;
 				//Actualiza estado si está con más de 50 de energía
 				if(this._energy < 50.0) {
 					this._state = State.HUNGER;
@@ -116,10 +115,14 @@ public class Wolf extends Animal{
 				if(this._desire < 65.0) {
 					this._state = State.NORMAL;
 					this._hunt_target = null;
+					this._mate_target = null;
+
 				}
 			}
 		}
 	}
+	
+
 
 
 	private void updateHunger(double dt) {
@@ -160,6 +163,8 @@ public class Wolf extends Animal{
 				if(this._desire > 65.0) {
 					this._state = State.MATE;
 					this._hunt_target = null;
+					this._mate_target = null;
+
 				}else {
 					this._state = State.NORMAL;
 					this._hunt_target = null;
@@ -185,6 +190,7 @@ public class Wolf extends Animal{
 			//Cambio de estado a MATE y cambio de objetivo a null
 			this._state = State.MATE;
 			this._hunt_target = null;
+			this._mate_target = null;
 		}
 	}
 

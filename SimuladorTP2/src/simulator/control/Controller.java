@@ -1,6 +1,7 @@
 package simulator.control;
 
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -86,14 +87,23 @@ public class Controller {
 	}
 
 	public void run(double t, double dt, boolean sv, OutputStream out) {
-
+		 
+		PrintStream p = new PrintStream(out);
+		
 		SimpleObjectViewer view = null;
-
+		
+		JSONObject info = new JSONObject(); 
+		
+		info.put("in", this._sim.as_JSON());
+		
 		if (sv) {
+			
 			MapInfo m = _sim.get_map_info();
+			
 			view = new SimpleObjectViewer("[ECOSYSTEM]",
 					m.get_width(), m.get_height(),
 					m.get_cols(), m.get_rows());
+			
 			view.update(to_animals_info(_sim.get_animals()), _sim.get_time(), dt);
 		}
 
@@ -101,6 +111,8 @@ public class Controller {
 			this._sim.advance(dt);
 			if (sv) view.update(to_animals_info(_sim.get_animals()), _sim.get_time(), dt);
 		}
-		if (sv) view.close();
+		
+		info.put("out", this._sim.as_JSON());
+		p.println(info);
 	}
 }

@@ -78,7 +78,6 @@ public class Simulator implements JSONable{
 			this._region_manager.update_animal_region(a);
 			
 			if(a._state == State.DEAD) {
-				
 				deadAnimals.add(a);
 				this._region_manager.unregister_animal(a);
 			}
@@ -87,9 +86,13 @@ public class Simulator implements JSONable{
 				newBornAnimals.add(a.deliver_baby());
 			}
 		}
+		
 		for(Animal a: newBornAnimals) {
 			this.add_animal(a);
 		}
+		
+//		this._animal_list.addAll(newBornAnimals);
+	
 		
 		this._region_manager.update_all_regions(dt);
 		this._animal_list.removeAll(deadAnimals);

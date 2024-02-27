@@ -155,7 +155,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 
 	//Función para ajustar la posición si está fuera del mapa
-	protected Vector2D adjustPosition(double x, double y) {
+	protected Vector2D adjustPosition(double y, double x) {
 
 		int width = this._region_mngr.get_width();
 		int height = this._region_mngr.get_height();
@@ -205,7 +205,9 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 		return jo;
 	}
-
+	public void resetTarget() {
+		this._mate_target = null;
+	}
 	public boolean isOut() {
 		return this._pos.getX() >= this._region_mngr.get_width()
 				|| this._pos.getX() < 0 || this._pos.getY() < 0
