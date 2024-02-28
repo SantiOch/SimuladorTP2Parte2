@@ -9,7 +9,7 @@ import simulator.model.*;
 
 public class SheepBuilder extends Builder<Animal> {
 
-	Factory<SelectionStrategy> selectionFactory;
+	private Factory<SelectionStrategy> selectionFactory;
 
 	public SheepBuilder(Factory<SelectionStrategy> f) {
 		super("sheep", "sheep builder");

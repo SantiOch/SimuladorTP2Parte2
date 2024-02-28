@@ -37,6 +37,9 @@ public class RegionManager implements AnimalMapView{
 		this._region_width = (width/cols);
 		this._region_height = (height/rows);
 		
+	  if ( _width % _cols != 0 || _height % _rows != 0) throw new IllegalArgumentException("Width/height is not divisible by cols/rows!");
+
+		
 		this._region = new Region[rows][cols];
 
 		for(int i = 0; i < rows; i++) {
@@ -105,7 +108,7 @@ public class RegionManager implements AnimalMapView{
 		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
 		for(int i = regMinHeightIndex; i < regMaxHeightIndex; i++) {
 			for(int j = regMinWidthIndex; j < regMaxWidthIndex; j++) {
-				for(Animal a: this._region[i][j].animalList) {
+				for(Animal a: this._region[i][j].getAnimals()) {
 					if(a != e && a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
 						listAux.add(a);
 					}
@@ -113,7 +116,7 @@ public class RegionManager implements AnimalMapView{
 			}
 		}
 		
-		//TODO Coger solo las regiones que están y hacer 2 forEach
+		//Coger solo las regiones que están y hacer 2 forEach
 		//Cada forEach comprobar Animal a: a.get_position().distanceTo(e.get_position) < r && filter.test(a)
 		//listAux.add(a);
 		
@@ -198,13 +201,9 @@ public class RegionManager implements AnimalMapView{
 	
 	//Devuelve la region a la que deberia pertenecer un animal por su posicion
 	private Region regByPos(Vector2D vect) {
-		
 		int regionJ = (int) (vect.getX() / this._region_width);
 		int regionI = (int) (vect.getY() / this._region_height);
-		
-		regionI = regionI > 0? regionI - 1: regionI;
-		regionJ = regionJ > 0? regionJ - 1: regionJ;
-		
+
 		return this._region[regionI][regionJ];
 	}
 
@@ -222,8 +221,8 @@ public class RegionManager implements AnimalMapView{
 				
 				JSONObject regionJSON = new JSONObject();
 				
-				regionJSON.put("row", i + 1);
-				regionJSON.put("col", j + 1);
+				regionJSON.put("row", i );
+				regionJSON.put("col", j );
 				
 				regionJSON.put("data", this._region[i][j].as_JSON());
 				

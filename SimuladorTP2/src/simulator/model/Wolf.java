@@ -59,7 +59,7 @@ public class Wolf extends Animal{
 			this._pos = adjustPosition(this.get_position().getX(), this.get_position().getY());
 		}
 
-		if(this._energy == 0.0 || this._age > 14.0) {
+		if(this._energy <= 0.0 || this._age > 14.0) {
 			this._state = State.DEAD;
 		}
 

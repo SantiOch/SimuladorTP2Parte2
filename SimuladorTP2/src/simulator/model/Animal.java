@@ -7,6 +7,13 @@ import simulator.misc.Vector2D;
 
 public abstract class Animal implements Entity, AnimalInfo{
 
+	private final static double _speed_variance = 0.2;
+	private final static double _init_speed_variance = 0.1;
+	private final static double _init_energy = 100.0;
+	private final static double _random_pos_newborn = 60.0;
+	private final static double _sight_range_variance = 0.2;
+	
+	
 	private String _genetic_code;
 
 	protected State _state;
@@ -31,6 +38,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 	protected Animal(String genetic_code, Diet diet, double sight_range,
 			double init_speed, SelectionStrategy mate_strategy, Vector2D pos){
+		
 		//FIXME Lanzar excepciones
 		if(genetic_code == null || (genetic_code != "Sheep" && genetic_code != "Wolf") || diet == null || mate_strategy == null){
 			throw new IllegalArgumentException("Invalid genetic_code/diet/mate_strategy");
@@ -43,10 +51,10 @@ public abstract class Animal implements Entity, AnimalInfo{
 
 		if(pos != null) this._pos = pos;			
 
-		this._speed = Utils.get_randomized_parameter(init_speed, 0.1);
+		this._speed = Utils.get_randomized_parameter(init_speed, _init_speed_variance);
 
 		this._state = State.NORMAL;
-		this._energy = 100.0;
+		this._energy = _init_energy;
 		this._desire = 0.0;
 
 		this._region_mngr = null;
@@ -76,9 +84,9 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this._diet = p1._diet;
 		this._energy = (p1._energy + p2._energy)/2;
 
-		this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale(60.0*(Utils._rand.nextGaussian()+1)));
-		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range()+p2.get_sight_range())/2, 0.2);
-		this._speed = Utils.get_randomized_parameter((p1.get_speed()+p2.get_speed())/2, 0.2);
+		this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1,1).scale( _random_pos_newborn *(Utils._rand.nextGaussian()+1)));
+		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range()+p2.get_sight_range())/2, _sight_range_variance);
+		this._speed = Utils.get_randomized_parameter((p1.get_speed()+p2.get_speed())/2, _speed_variance);
 
 	}
 

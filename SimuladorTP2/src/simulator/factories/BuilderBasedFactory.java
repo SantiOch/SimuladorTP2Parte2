@@ -33,9 +33,6 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 		this._builders.put(b.get_type_tag(), b);
 		this._builders_info.add(b.get_info());
 
-		//add an entry “b.getTag() |−> b” to _builders. // ...
-		//add b.get_info() to _buildersInfo
-		//...
 	}
 
 	@Override

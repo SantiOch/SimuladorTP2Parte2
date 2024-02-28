@@ -21,7 +21,6 @@ public class Controller {
 	}
 
 	public void load_data(JSONObject data) {
-		//TODO
 
 		//Load region data
 		if(data.has("regions")) {
@@ -81,7 +80,7 @@ public class Controller {
 
 		for (AnimalInfo a : animals) {
 
-			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(),(int)Math.round(a.get_age())+2));
+			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(),(int) Math.round(a.get_age())+2));
 		}
 		return ol; 
 	}
@@ -100,19 +99,21 @@ public class Controller {
 			
 			MapInfo m = _sim.get_map_info();
 			
-			view = new SimpleObjectViewer("[ECOSYSTEM]",
-					m.get_width(), m.get_height(),
-					m.get_cols(), m.get_rows());
-			
+			view = new SimpleObjectViewer("[ECOSYSTEM]", m.get_width(), m.get_height(), m.get_cols(), m.get_rows());
 			view.update(to_animals_info(_sim.get_animals()), _sim.get_time(), dt);
 		}
 
 		while(this._sim.get_time() <= t) {
+			
 			this._sim.advance(dt);
+			
 			if (sv) view.update(to_animals_info(_sim.get_animals()), _sim.get_time(), dt);
 		}
 		
+//		if(sv) view.close();
+		
 		info.put("out", this._sim.as_JSON());
+		
 		p.println(info);
 	}
 }

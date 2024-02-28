@@ -59,8 +59,8 @@ public class Main {
 	private static Double _time = null;
 	private static String _in_file = null;
 	private static String _out_file = null;
-	private static boolean sv = false;
-	private static Double dt = null;
+	private static boolean _sv = false;
+	private static Double _dt = null;
 	private static ExecMode _mode = ExecMode.BATCH;
 
 	private static void parse_args(String[] args) {
@@ -154,20 +154,17 @@ public class Main {
 		}
 	}
 	
-	private static void parse_simple_viewer_option(CommandLine line) {
-		// TODO Auto-generated method stub
-		
+	private static void parse_simple_viewer_option(CommandLine line) {		
 		if(line.hasOption("sv")) {
-			sv = true;
+			_sv = true;
 		}
-
 	}
 
 	private static void parse_delta_time_option(CommandLine line) throws ParseException {
 		String t = line.getOptionValue("dt", _default_delta_time.toString());
 		try {
-			dt = Double.parseDouble(t);
-			assert (dt >= 0);
+			_dt = Double.parseDouble(t);
+			assert (_dt >= 0);
 		} catch (Exception e) {
 			throw new ParseException("Invalid value for time: " + t);
 		}		
@@ -183,16 +180,16 @@ public class Main {
 
 	private static void init_factories() {
 
-		//TODO Completar el método init_factories para inicializar las factorías y almacenarlas en los atributos correspondientes.
+		//Completar el método init_factories para inicializar las factorías y almacenarlas en los atributos correspondientes.
  
+		Factory<SelectionStrategy> selection_strategy_factory;
 		List<Builder<SelectionStrategy>> selection_strategy_builders = new ArrayList<>();
-
+		
 		selection_strategy_builders.add(new SelectFirstBuilder());
 		selection_strategy_builders.add(new SelectClosestBuilder()); 
 		selection_strategy_builders.add(new SelectYoungestBuilder()); 
 
-		Factory<SelectionStrategy> selection_strategy_factory =
-				new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
+		selection_strategy_factory = new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
 		
 		List<Builder<Animal>> animal_builders = new ArrayList<>();
 
@@ -229,19 +226,18 @@ public class Main {
 		
 		con.load_data(jo);
 
-		con.run(_time, dt, sv, os);
+		con.run(_time, _dt, _sv, os);
 		
 		os.close();
 		
-		/*Completar el método start_batch_mode para que haga lo siguiente 
+		/* Completar el método start_batch_mode para que haga lo siguiente 
 		 * (1) cargar el archivo de entrada en un JSONObject; 
 		 * (2) crear el archivo de salida; 
 		 * (3) crear una instancia de Simulator pasando a su constructora la información que necesita; 
 		 * (4) crear una instancia de Controller pasandole el simulador; 
 		 * (5) llamar a load_data pasandole el JSONObject de la entrada; y 
 		 * (6) llamar al método run con los parámetros correspondents; y 
-		 * (7) cerrar el archivo de salida.
-		 * */
+		 * (7) cerrar el archivo de salida. */
 	}
 
 	private static void start_GUI_mode() throws Exception {
