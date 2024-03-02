@@ -13,15 +13,14 @@ import simulator.view.SimpleObjectViewer;
 import simulator.view.SimpleObjectViewer.ObjInfo;
 
 
-public class Controller {
-	private Simulator _sim;
+public class Controller{
+	private final Simulator _sim;
 
 	public Controller(Simulator sim) {
 		this._sim = sim;
 	}
 
 	public void load_data(JSONObject data) {
-
 		//Load region data
 		if(data.has("regions")) {
 
@@ -29,10 +28,12 @@ public class Controller {
 
 			int minRow, maxRow, minCol, maxCol;
 
-			JSONArray rows = null;
-			JSONArray cols = null;
+
 
 			for(int i = 0; i < regiones.length(); i++) {
+
+				JSONArray rows;
+				JSONArray cols;
 
 				JSONObject jo = regiones.getJSONObject(i);
 
@@ -82,11 +83,14 @@ public class Controller {
 
 			ol.add(new ObjInfo(a.get_genetic_code(), (int) a.get_position().getX(), (int) a.get_position().getY(),(int) Math.round(a.get_age())+2));
 		}
+
 		return ol; 
 	}
 
 	public void run(double t, double dt, boolean sv, OutputStream out) {
 		 
+		if(t < 0 || dt < 0) throw new IllegalArgumentException("Time/delta-time cannot be a negative number");
+		
 		PrintStream p = new PrintStream(out);
 		
 		SimpleObjectViewer view = null;

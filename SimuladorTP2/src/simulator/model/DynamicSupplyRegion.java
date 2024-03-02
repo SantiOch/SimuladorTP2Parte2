@@ -4,9 +4,12 @@ import simulator.misc.Utils;
 
 public class DynamicSupplyRegion extends Region{
 	
+	private final static double _exp_multiplier = 60.0;
+	private final static double _herbivores_subtraction = 5.0;
+	private final static double _food_multiplier = 2.0;
+
 	private double _food;
-	private double _factor;
-//	private int _hervivores; No se si tener numero de hervívoros o no
+	private final double _factor;
 	
 	public DynamicSupplyRegion(double food, double factor) {
 		this._food = food;
@@ -21,9 +24,9 @@ public class DynamicSupplyRegion extends Region{
 			return 0.0;
 		}
 		
-		int n = super.getHervivores();
+		int n = super.getHerbivores();
 		
-		double food_returned = Math.min(_food, 60.0 * Math.exp(-Math.max(0, n - 5.0) * 2.0) * dt);
+		double food_returned = Math.min(_food, _exp_multiplier * Math.exp(-Math.max(0, n - _herbivores_subtraction) * _food_multiplier) * dt);
 		
 		this._food -= food_returned;
 		

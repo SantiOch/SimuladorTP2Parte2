@@ -13,7 +13,7 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 	protected List<Animal> animalList;
 	
 	public Region() {
-		this.animalList = new LinkedList<Animal>();
+		this.animalList = new LinkedList<>();
 	}
 	
 	final void add_animal(Animal a) {
@@ -45,7 +45,7 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 		return jo;
 	}
 	
-	protected int getHervivores() {
+	protected int getHerbivores() {
 		
 		int n = 0;
 

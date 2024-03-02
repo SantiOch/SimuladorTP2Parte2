@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import org.json.JSONObject;
 
 public class BuilderBasedFactory<T> implements Factory<T> {
-	private Map<String, Builder<T>> _builders;
-	private List<JSONObject> _builders_info;
+	private final Map<String, Builder<T>> _builders;
+	private final List<JSONObject> _builders_info;
 
 	public BuilderBasedFactory() {
 
-		this._builders = new HashMap<String, Builder<T>>();
-		this._builders_info = new LinkedList<JSONObject>();
+		this._builders = new HashMap<>();
+		this._builders_info = new LinkedList<>();
 		//Create a HashMap for _builders, and a LinkedList _builders_info // ...
 		
 	}

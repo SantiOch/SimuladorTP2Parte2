@@ -1,8 +1,6 @@
 package simulator.model;
 
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
@@ -15,17 +13,17 @@ import simulator.misc.Vector2D;
 
 public class RegionManager implements AnimalMapView{
 
-	private int _cols;
-	private int	_rows;
-	private int	_width;
-	private int	_height;
+	private final int _cols;
+	private final int _rows;
+	private final int _width;
+	private final int _height;
 	
-	private int	_region_width;
-	private int _region_height;
+	private final int _region_width;
+	private final int _region_height;
 	
-	private Region[][] _region;
+	private final Region[][] _region;
 	
-	private Map<Animal, Region> _animal_region;
+	private final Map<Animal, Region> _animal_region;
 	
 	public RegionManager(int cols, int rows, int width, int height) {
 		
@@ -37,9 +35,8 @@ public class RegionManager implements AnimalMapView{
 		this._region_width = (width/cols);
 		this._region_height = (height/rows);
 		
-	  if ( _width % _cols != 0 || _height % _rows != 0) throw new IllegalArgumentException("Width/height is not divisible by cols/rows!");
+	  	if ( _width % _cols != 0 || _height % _rows != 0) throw new IllegalArgumentException("Width/height is not divisible by cols/rows!");
 
-		
 		this._region = new Region[rows][cols];
 
 		for(int i = 0; i < rows; i++) {
@@ -86,7 +83,7 @@ public class RegionManager implements AnimalMapView{
 	public List<Animal> get_animals_in_range(Animal e, Predicate<Animal> filter) {
 		
 		//Nueva lista para almacenar los animales que ve y que cumplen la condición
-		List<Animal> listAux = new LinkedList<Animal>();
+		List<Animal> listAux = new LinkedList<>();
 		
 		//Legibilidad
 		double range = e.get_sight_range();
@@ -100,10 +97,10 @@ public class RegionManager implements AnimalMapView{
 		int regMaxHeightIndex = (int) ((posY + range) / this._region_height);
 		
 		//Ver que no se salgan del mapa, si se salen, se establecen en los límites
-		regMinWidthIndex = regMinWidthIndex < 0 ? 0: regMinWidthIndex;
-		regMaxWidthIndex = regMaxWidthIndex > this._cols ? this._cols: regMaxWidthIndex;
-		regMinHeightIndex = regMinHeightIndex < 0 ? 0: regMinHeightIndex;
-		regMaxHeightIndex = regMaxHeightIndex > this._rows ? this._rows: regMaxHeightIndex;
+		regMinWidthIndex = Math.max(regMinWidthIndex, 0);
+		regMaxWidthIndex = Math.min(regMaxWidthIndex, this._cols);
+		regMinHeightIndex = Math.max(regMinHeightIndex, 0);
+		regMaxHeightIndex = Math.min(regMaxHeightIndex, this._rows);
 		
 		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
 		for(int i = regMinHeightIndex; i < regMaxHeightIndex; i++) {
@@ -122,13 +119,13 @@ public class RegionManager implements AnimalMapView{
 		
 		/* Calcular que regiones toca o ve el animal con su campo de visión, pintar ejes centrados en el animal (Cruz),
 		 * con esos miro en que regiones toco, ver en cada una la lista de animales, ya que son candidatos a que me interesen.
-		 * Con cuales me quedo, con los que estén lo suficientemente cerca para verlos y que además cumplan el predicate.
-		 * Osea que la distancia a el animal es menor que r ( campo de visión) y que cumplan el test */
+		 * Con cuáles me quedo, con los que estén lo suficientemente cerca para verlos y que además cumplan el predicate.
+		 * O sea que la distancia al animal es menor que r (campo de visión) y que cumplan el test */
 
 		return listAux;
 	}
 	
-	//Cambia la región que está en la posicion [row][col] por la región r, y cambia todos los animales que estaban en esa región a la nueva
+	//Cambia la región que está en la posición [row][col] por la región r, y cambia todos los animales que estaban en esa región a la nueva
 	void set_region(int row, int col, Region r) {
 		
 		//Cambia todos los animales que estaban antes en esa región a la nueva
@@ -199,10 +196,11 @@ public class RegionManager implements AnimalMapView{
 		}
 	}
 	
-	//Devuelve la region a la que deberia pertenecer un animal por su posicion
+	//Devuelve la region a la que debería pertenecer un animal por su posición
 	private Region regByPos(Vector2D vect) {
-		int regionJ = (int) (vect.getX() / this._region_width);
+		
 		int regionI = (int) (vect.getY() / this._region_height);
+		int regionJ = (int) (vect.getX() / this._region_width);
 
 		return this._region[regionI][regionJ];
 	}

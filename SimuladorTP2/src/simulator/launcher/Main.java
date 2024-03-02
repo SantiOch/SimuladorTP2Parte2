@@ -1,4 +1,4 @@
-package simulator.launcher;
+ package simulator.launcher;
 
 import simulator.model.*;
 import simulator.factories.*;
@@ -32,8 +32,8 @@ public class Main {
 	private enum ExecMode {
 		BATCH("batch", "Batch mode"), GUI("gui", "Graphical User Interface mode");
 
-		private String _tag;
-		private String _desc;
+		private final String _tag;
+		private final String _desc;
 
 		private ExecMode(String modeTag, String modeDesc) {
 			_tag = modeTag;
@@ -161,12 +161,12 @@ public class Main {
 	}
 
 	private static void parse_delta_time_option(CommandLine line) throws ParseException {
-		String t = line.getOptionValue("dt", _default_delta_time.toString());
+		String dt = line.getOptionValue("dt", _default_delta_time.toString());
 		try {
-			_dt = Double.parseDouble(t);
+			_dt = Double.parseDouble(dt);
 			assert (_dt >= 0);
 		} catch (Exception e) {
-			throw new ParseException("Invalid value for time: " + t);
+			throw new ParseException("Invalid value for time: " + dt);
 		}		
 	}
 
@@ -189,21 +189,21 @@ public class Main {
 		selection_strategy_builders.add(new SelectClosestBuilder()); 
 		selection_strategy_builders.add(new SelectYoungestBuilder()); 
 
-		selection_strategy_factory = new BuilderBasedFactory<SelectionStrategy>(selection_strategy_builders);
+		selection_strategy_factory = new BuilderBasedFactory<>(selection_strategy_builders);
 		
 		List<Builder<Animal>> animal_builders = new ArrayList<>();
 
 		animal_builders.add(new WolfBuilder(selection_strategy_factory));
 		animal_builders.add(new SheepBuilder(selection_strategy_factory));
 		
-		ani_factory = new BuilderBasedFactory<Animal>(animal_builders);
+		ani_factory = new BuilderBasedFactory<>(animal_builders);
 		
 		List<Builder<Region>> region_builders = new ArrayList<>();
 
 		region_builders.add(new DefaultRegionBuilder());
 		region_builders.add(new DynamicSupplyRegionBuilder());
 		
-		reg_factory = new BuilderBasedFactory<Region>(region_builders);
+		reg_factory = new BuilderBasedFactory<>(region_builders);
 
 	}
 
@@ -214,10 +214,10 @@ public class Main {
 
 	private static void start_batch_mode() throws Exception {
 		
-		InputStream is = new FileInputStream(new File(_in_file));
+		InputStream is = new FileInputStream(_in_file);
 
-		OutputStream os = new FileOutputStream(new File(_out_file));
-
+		OutputStream os = new FileOutputStream(_out_file);
+		
 		JSONObject jo = load_JSON_file(is);
 
 		Simulator sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), ani_factory, reg_factory);
@@ -250,7 +250,7 @@ public class Main {
 		parse_args(args); 
 		switch (_mode) { 
 		case BATCH:
-			start_batch_mode(); 
+			start_batch_mode();
 			break;
 		case GUI:
 			start_GUI_mode(); 

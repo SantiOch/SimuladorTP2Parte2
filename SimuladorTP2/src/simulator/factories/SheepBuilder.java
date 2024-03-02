@@ -9,7 +9,7 @@ import simulator.model.*;
 
 public class SheepBuilder extends Builder<Animal> {
 
-	private Factory<SelectionStrategy> selectionFactory;
+	private final Factory<SelectionStrategy> selectionFactory;
 
 	public SheepBuilder(Factory<SelectionStrategy> f) {
 		super("sheep", "sheep builder");
@@ -27,10 +27,12 @@ public class SheepBuilder extends Builder<Animal> {
 
 		if(data.has("mate_strategy")) mate_strategy = this.selectionFactory.create_instance(data.getJSONObject("mate_strategy"));
 
+		//Valor por defecto
 		if(mate_strategy == null) mate_strategy = new SelectFirst();
-		
+
 		if(data.has("danger_strategy")) danger_strategy = this.selectionFactory.create_instance(data.getJSONObject("danger_strategy"));
 
+		//Valor por defecto
 		if(danger_strategy == null) danger_strategy = new SelectFirst();
 
 		if(data.has("pos")) {
@@ -41,13 +43,15 @@ public class SheepBuilder extends Builder<Animal> {
 			JSONArray y = jo.getJSONArray("y_range");
 
 			if(x.length() != 2 || y.length() != 2) {
-				throw new IllegalArgumentException("Wrong number of parameters in x/y range");
+				throw new IllegalArgumentException("Wrong number of parameters in x/y range!");
 			}
-			
+
 			double minX = x.getDouble(0);
 			double maxX = x.getDouble(1);
 			double minY = y.getDouble(0);
 			double maxY= y.getDouble(1);
+			
+			if(minX < 0 || maxX < 0 || minY < 0 || maxY < 0) throw new IllegalArgumentException("Position range cannot be negative!");
 
 			double posX, posY;
 
@@ -60,5 +64,33 @@ public class SheepBuilder extends Builder<Animal> {
 
 		return new Sheep(mate_strategy, danger_strategy, pos);
 	}
+	
+	@Override
+	protected void fill_in_data(JSONObject data) {
+		
+		JSONArray x = new JSONArray();
+		JSONArray y = new JSONArray();
+		
+		x.put(100.0);
+		x.put(200.0);
+		
+		y.put(100.0);
+		y.put(200.0);
+		
+		JSONObject mateStrat = new JSONObject();
+		JSONObject dangerStrat = new JSONObject();
+		
+		mateStrat.put("type", "first");
+		dangerStrat.put("type",	"closest");
 
+		JSONObject pos = new JSONObject();
+		
+		pos.put("x_range", x);
+		pos.put("y_range", y);
+		
+		data.put("mate_strategy", mateStrat);
+		data.put("danger_strategy", dangerStrat);
+		data.put("pos", pos);
+
+	}
 }

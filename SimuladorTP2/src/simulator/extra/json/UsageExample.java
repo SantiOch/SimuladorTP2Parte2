@@ -152,7 +152,7 @@ public class UsageExample {
 		JSONArray ja = new JSONArray();
 		ja.put(123.34);
 		ja.put(3.23);
-		ja.put(4.234);
+		ja.put("**********************************************");
 		jo1.put("d", ja);
 
 		// we put another JSON into 'jo1'

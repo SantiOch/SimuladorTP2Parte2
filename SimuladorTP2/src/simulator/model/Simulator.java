@@ -11,14 +11,16 @@ import java.util.Collections;
 
 public class Simulator implements JSONable{
 	
-	private Factory<Animal> _animals_factory;
-	private Factory<Region> _regions_factory;
+	private final Factory<Animal> _animals_factory;
+	private final Factory<Region> _regions_factory;
 	
-	private RegionManager _region_manager;
-	private List<Animal> _animal_list;
+	private final RegionManager _region_manager;
+	private final List<Animal> _animal_list;
 	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory, Factory<Region> regions_factory) {
+		
+		if(animals_factory == null || regions_factory == null) throw new IllegalArgumentException("Factories cannot be null!");
 		
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;		
@@ -73,29 +75,30 @@ public class Simulator implements JSONable{
 		List<Animal> newBornAnimals = new LinkedList<>();
 		
 		for(Animal a: this._animal_list) {
-		
-			a.update(dt);
-			this._region_manager.update_animal_region(a);
-			
 			if(a._state == State.DEAD) {
 				deadAnimals.add(a);
 				this._region_manager.unregister_animal(a);
 			}
-			
+		}
+		
+		this._animal_list.removeAll(deadAnimals);
+
+		for(Animal a: this._animal_list) {
+			a.update(dt);
+			this._region_manager.update_animal_region(a);
+		}	
+		
+		this._region_manager.update_all_regions(dt);
+		
+		for(Animal a: this._animal_list) {
 			if(a.is_pregnant()) {
-				newBornAnimals.add(a.deliver_baby());
+				Animal baby = a.deliver_baby();
+				newBornAnimals.add(baby);
+				this._region_manager.register_animal(baby);
 			}
 		}
 		
-		for(Animal a: newBornAnimals) {
-			this.add_animal(a);
-		}
-		
-//		this._animal_list.addAll(newBornAnimals);
-	
-		
-		this._region_manager.update_all_regions(dt);
-		this._animal_list.removeAll(deadAnimals);
+		this._animal_list.addAll(newBornAnimals);
 		
 	}
 	

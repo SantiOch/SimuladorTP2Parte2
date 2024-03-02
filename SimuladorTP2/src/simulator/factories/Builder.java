@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 public abstract class Builder<T> {
 
-	private String _type_tag;
-	private String _desc;
+	private final String _type_tag;
+	private final String _desc;
 	
 	public Builder(String type_tag, String desc) {
 		if (type_tag == null || desc == null || type_tag.isBlank() || desc.isBlank())
