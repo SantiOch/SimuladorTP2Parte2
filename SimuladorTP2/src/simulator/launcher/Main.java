@@ -6,7 +6,6 @@ import simulator.control.*;
 import simulator.factories.Factory;
 
 import java.util.*;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -22,6 +21,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import simulator.misc.Utils;
+import simulator.model.Animal;
+import simulator.model.Region;
+import simulator.model.SelectionStrategy;
 //import simulator.view.SimpleObjectViewer;
 
 public class Main {
@@ -88,10 +90,10 @@ public class Main {
 			//
 			String[] remaining = line.getArgs();
 			if (remaining.length > 0) {
-				String error = "Illegal arguments:";
+				StringBuilder error = new StringBuilder("Illegal arguments:");
 				for (String o : remaining)
-					error += (" " + o);
-				throw new ParseException(error);
+					error.append(" ").append(o);
+				throw new ParseException(error.toString());
 			}
 
 		} catch (ParseException e) {
@@ -259,7 +261,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		Utils._rand.setSeed(2147483647l);
+		Utils._rand.setSeed(2147483647L);
 
 		try {
 			start(args);

@@ -7,13 +7,22 @@
     "amount" : 200,
     "spec" : {
       "type" : "sheep",
-      "data" : { }
+      "data" : {
+      "mate_strategy" :{
+       "type" : "closest"
+       }
+       }
     }
   }, {
     "amount" : 30,
     "spec" : {
       "type" : "wolf",
-      "data" : { }
+      "data" : {
+          "hunt_strategy" : {
+            "type" : "closest"
+          }
+        }
+      }
     }
-  } ]
+   ]
 }

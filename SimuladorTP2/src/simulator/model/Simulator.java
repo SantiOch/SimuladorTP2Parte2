@@ -75,7 +75,7 @@ public class Simulator implements JSONable{
 		List<Animal> newBornAnimals = new LinkedList<>();
 		
 		for(Animal a: this._animal_list) {
-			if(a._state == State.DEAD) {
+			if(a.get_state() == State.DEAD) {
 				deadAnimals.add(a);
 				this._region_manager.unregister_animal(a);
 			}

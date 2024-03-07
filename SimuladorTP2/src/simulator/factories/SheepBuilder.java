@@ -5,7 +5,10 @@ import org.json.JSONObject;
 
 import simulator.misc.Utils;
 import simulator.misc.Vector2D;
-import simulator.model.*;
+import simulator.model.Animal;
+import simulator.model.Sheep;
+import simulator.model.SelectFirst;
+import simulator.model.SelectionStrategy;
 
 public class SheepBuilder extends Builder<Animal> {
 

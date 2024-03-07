@@ -5,29 +5,29 @@ import simulator.misc.Vector2D;
 
 public class Sheep extends Animal{
 
-	private final static String _gcode = "Sheep";
-	private final static double _sight_range = 40.0;
-	private final static double _init_speed = 35.0;
-	private final static double _max_age = 8.0;
-	private final static double _min_energy = 0.0;
-	private final static double _max_energy = 100.0;
-	private final static double _min_desire = 0.0;
-	private final static double _max_desire = 100.0;
-	private final static double _min_distance = 8.0;
-	private final static double _speed_variance = 0.007;
-	private final static double _energy_multiplier = 20.0;
-	private final static double _desire_multiplier = 40.0;
-	private final static double _mate_minimum = 65.0;
-	private final static double _running_multiplier = 2.0;
-	private final static double _running_tiredness_multiplier = 1.2;
-	private final static double _baby_probability = 0.9;
+	private final static String GCODE = "Sheep";
+	private final static double SIGHT_RANGE = 40.0;
+	private final static double INIT_SPEED = 35.0;
+	private final static double MAX_AGE = 8.0;
+	private final static double MIN_ENERGY = 0.0;
+	private final static double MAX_ENERGY = 100.0;
+	private final static double MIN_DESIRE = 0.0;
+	private final static double MAX_DESIRE = 100.0;
+	private final static double MIN_DISTANCE = 8.0;
+	private final static double SPEED_VARIANCE = 0.007;
+	private final static double ENERGY_MULTIPLIER = 20.0;
+	private final static double DESIRE_MULTIPLIER = 40.0;
+	private final static double MATE_MINIMUM = 65.0;
+	private final static double RUNNING_MULTIPLIER = 2.0;
+	private final static double RUNNING_TIREDNESS_MULTIPLIER = 1.2;
+	private final static double BABY_PROBABILITY = 0.9;
 
 	private Animal _danger_source;
 	private final SelectionStrategy _danger_strategy;
 	
 	public Sheep(SelectionStrategy mate_strategy, SelectionStrategy danger_strategy,
 			Vector2D pos) {
-		super(_gcode, Diet.HERBIVORE, _sight_range, _init_speed, mate_strategy, pos);
+		super(GCODE, Diet.HERBIVORE, SIGHT_RANGE, INIT_SPEED, mate_strategy, pos);
 		this._danger_strategy = danger_strategy;
 	}
 
@@ -71,14 +71,14 @@ public class Sheep extends Animal{
 			this._pos = adjustPosition(this.get_position().getX(), this.get_position().getY());
 		}
 
-		if(this._energy <= _min_energy || this._age >= _max_age) {
+		if(this._energy <= MIN_ENERGY || this._age >= MAX_AGE) {
 			this._state = State.DEAD;
 		}
 
 		if(this._state != State.DEAD) {
 			this._energy += this.get_region_mngr().get_food(this, dt);
-			if(this._energy < _min_energy) this._energy = _min_energy;
-			if(this._energy > _max_energy) this._energy = _max_energy;		
+			if(this._energy < MIN_ENERGY) this._energy = MIN_ENERGY;
+			if(this._energy > MAX_ENERGY) this._energy = MAX_ENERGY;
 		}
 
 	}
@@ -86,9 +86,9 @@ public class Sheep extends Animal{
 	private void updateNormal(double dt) {
 
 		//Avanzar
-		super.advance(dt, _min_distance,
-				_max_energy, _min_energy, _energy_multiplier,
-				_desire_multiplier, _min_desire, _max_desire, _speed_variance);
+		super.advance(dt, MIN_DISTANCE,
+				MAX_ENERGY, MIN_ENERGY, ENERGY_MULTIPLIER,
+				DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE, SPEED_VARIANCE);
 		//Cambio de estado
 		if(_danger_source == null) {
 
@@ -100,7 +100,7 @@ public class Sheep extends Animal{
 		if(this._danger_source != null) {
 			this._state = State.DANGER;
 			this._mate_target = null;
-		}else if(this._desire > _mate_minimum) {
+		}else if(this._desire > MATE_MINIMUM) {
 			this._state = State.MATE;
 		}
 	}
@@ -115,16 +115,16 @@ public class Sheep extends Animal{
 		//Avanzar ya que danger source es nulo
 		if(this._danger_source == null) {
 
-			super.advance(dt, _min_distance,
-					_max_energy, _min_energy, _energy_multiplier,
-					_desire_multiplier, _min_desire, _max_desire, _speed_variance);
+			super.advance(dt, MIN_DISTANCE,
+					MAX_ENERGY, MIN_ENERGY, ENERGY_MULTIPLIER,
+					DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE, SPEED_VARIANCE);
 		}else {
 
 			this._dest = this._pos.plus(this._pos.minus(_danger_source.get_position()).direction());
 
-			super.advanceRunning(dt, _running_multiplier, _speed_variance,
-					_energy_multiplier, _running_tiredness_multiplier, _min_energy,
-					_max_energy, _desire_multiplier, _min_desire, _max_desire );
+			super.advanceRunning(dt, RUNNING_MULTIPLIER, SPEED_VARIANCE,
+					ENERGY_MULTIPLIER, RUNNING_TIREDNESS_MULTIPLIER, MIN_ENERGY,
+					MAX_ENERGY, DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE);
 
 			if(this._danger_source == null || this._danger_source.get_position().distanceTo(this._pos) > this.get_sight_range()) {
 
@@ -136,7 +136,7 @@ public class Sheep extends Animal{
 
 			//Comprobar otra vez ya que puede haber escogido un nuevo danger source
 			if(this._danger_source == null) {
-				if(this._desire > _mate_minimum) {
+				if(this._desire > MATE_MINIMUM) {
 					this._state = State.MATE;
 
 				}else {
@@ -154,22 +154,22 @@ public class Sheep extends Animal{
 		//No ha conseguido encontrar otro animal para emparejarse
 		if (this._mate_target == null) {
 
-			super.advance(dt, _min_distance,
-					_max_energy, _min_energy, _energy_multiplier,
-					_desire_multiplier, _min_desire, _max_desire, _speed_variance);
+			super.advance(dt, MIN_DISTANCE,
+					MAX_ENERGY, MIN_ENERGY, ENERGY_MULTIPLIER,
+					DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE, SPEED_VARIANCE);
 		} else {
 			this._dest = this._mate_target.get_position();
 
-			super.advanceRunning(dt, _running_multiplier, _speed_variance,
-					_energy_multiplier, _running_tiredness_multiplier, _min_energy,
-					_max_energy, _desire_multiplier, _min_desire, _max_desire);
+			super.advanceRunning(dt, RUNNING_MULTIPLIER, SPEED_VARIANCE,
+					ENERGY_MULTIPLIER, RUNNING_TIREDNESS_MULTIPLIER, MIN_ENERGY,
+					MAX_ENERGY, DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE);
 
-			if (this._pos.distanceTo(this._mate_target.get_position()) < _min_distance) {
+			if (this._pos.distanceTo(this._mate_target.get_position()) < MIN_DISTANCE) {
 
 				super.resetDesire();
 				this._mate_target.resetDesire();
 
-				if (this._baby == null && Utils._rand.nextDouble() < _baby_probability) {
+				if (this._baby == null && Utils._rand.nextDouble() < BABY_PROBABILITY) {
 
 					//Crea un nuevo bebé con probabilidad de 0.9
 					this._baby = new Sheep(this, this._mate_target);
@@ -192,7 +192,7 @@ public class Sheep extends Animal{
 			this._state = State.DANGER;
 			this._mate_target = null;
 
-		} else if (this._desire < _mate_minimum) {
+		} else if (this._desire < MATE_MINIMUM) {
 
 			this._state = State.NORMAL;
 		}

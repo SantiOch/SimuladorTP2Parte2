@@ -1,5 +1,7 @@
 package simulator.model;
 
+import simulator.model.JSONable;
+
 public interface MapInfo extends JSONable {
   public int get_cols();
   public int get_rows();

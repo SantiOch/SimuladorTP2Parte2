@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3ed71a0f-4e61-4e85-8afa-8cf3cd19ae8f" name="Changes" comment="Cambios para evitar codigo repetido y legibilidad">
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/ex1.json" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/ex1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/control/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/control/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/factories/DefaultRegionBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/factories/DefaultRegionBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/factories/SheepBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/factories/SheepBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/launcher/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/launcher/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/Animal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/FoodSupplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/FoodSupplier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/MapInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/MapInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/RegionInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/RegionInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/RegionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/RegionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/SelectClosest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/SelectClosest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/SelectYoungest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/SelectYoungest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/SelectionStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/SelectionStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/Sheep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/Sheep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/Simulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/Simulator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simulator/model/Wolf.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulator/model/Wolf.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="e1d01a48-9f62-4931-a4af-ddc6e114e418" />
+        <option name="url" value="https://github.com/SantiOch/SimuladorTP2.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2d56QCqzFWe4j4P0yIiANL0so8d" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.qodana&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="QodanaReportsService">
+    <option name="descriptions">
+      <ReportDescription localRun="true" path="/private/var/folders/20/bhjdzx713sb4vzd6cwhgn02r0000gn/T/qodana_output/qodana.sarif.json" reportGuid="a5cb0031-e45e-471f-8c50-9599d722fe49" reportId="SimuladorTP2/qodana/2024-03-01" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="simulator.launcher.Main" />
+      <module name="SimuladorTP2" />
+      <option name="PROGRAM_PARAMETERS" value="-i resources/examples/ex1.json -o resources/tmp/myout1.json -dt 0.03 -sv" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="simulator.launcher.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.9-corretto-17.0.9-4caba194b151-92e50af3" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3ed71a0f-4e61-4e85-8afa-8cf3cd19ae8f" name="Changes" comment="" />
+      <created>1709285574537</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1709285574537</updated>
+      <workItem from="1709285576101" duration="8396000" />
+      <workItem from="1709315318421" duration="12876000" />
+      <workItem from="1709559188957" duration="174000" />
+      <workItem from="1709631066974" duration="1591000" />
+      <workItem from="1709634270958" duration="5559000" />
+    </task>
+    <task id="LOCAL-00001" summary="Cambios para evitar codigo repetido y legibilidad">
+      <option name="closed" value="true" />
+      <created>1709400843396</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1709400843396</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Cambios para evitar codigo repetido y legibilidad" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cambios para evitar codigo repetido y legibilidad" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

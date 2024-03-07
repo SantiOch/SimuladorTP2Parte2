@@ -126,7 +126,7 @@ public class RegionManager implements AnimalMapView{
 	}
 	
 	//Cambia la región que está en la posición [row][col] por la región r, y cambia todos los animales que estaban en esa región a la nueva
-	void set_region(int row, int col, Region r) {
+	public void set_region(int row, int col, Region r) {
 		
 		//Cambia todos los animales que estaban antes en esa región a la nueva
 		Region old = this._region[row][col];
@@ -142,7 +142,7 @@ public class RegionManager implements AnimalMapView{
 		this._region[row][col] = r;
 	}
 	
-	void register_animal(Animal a) {
+	public void register_animal(Animal a) {
 		
 		//Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición) y 
 		//lo añade a esa región y actualiza _animal_region.
@@ -156,13 +156,13 @@ public class RegionManager implements AnimalMapView{
 		this._animal_region.put(a, r);
 	}
 	
-	void unregister_animal(Animal a) {
+	public void unregister_animal(Animal a) {
 		
 		this._animal_region.get(a).remove_animal(a);
 		this._animal_region.remove(a);	
 	}
 	
-	void update_animal_region(Animal a) {
+	public void update_animal_region(Animal a) {
 		
 		//Encuentra la región a la que tiene que pertenecer el animal (a partir de su posición actual),
 		//y si es distinta de su región actual lo añade a la nueva región, 
@@ -188,7 +188,7 @@ public class RegionManager implements AnimalMapView{
 	}
 	
 	//Update de todas las regiones
-	void update_all_regions(double dt) {
+	public void update_all_regions(double dt) {
 		for(Region[] ArrReg: this._region) {
 			for(Region Reg: ArrReg) {
 				Reg.update(dt);

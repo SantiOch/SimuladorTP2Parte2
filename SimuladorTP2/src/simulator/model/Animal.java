@@ -9,11 +9,11 @@ import java.util.Objects;
 
 public abstract class Animal implements Entity, AnimalInfo {
 
-	private final static double _speed_variance = 0.2;
-	private final static double _init_speed_variance = 0.1;
-	private final static double _init_energy = 100.0;
-	private final static double _random_pos_newborn = 60.0;
-	private final static double _sight_range_variance = 0.2;
+	private final static double SPEED_VARIANCE = 0.2;
+	private final static double INIT_SPEED_VARIANCE = 0.1;
+	private final static double INIT_ENERGY = 100.0;
+	private final static double RANDOM_POS_NEWBORN = 60.0;
+	private final static double SIGHT_RANGE_VARIANCE = 0.2;
 
 
 	private final String _genetic_code;
@@ -52,10 +52,10 @@ public abstract class Animal implements Entity, AnimalInfo {
 
 		if (pos != null) this._pos = pos;
 
-		this._speed = Utils.get_randomized_parameter(init_speed, _init_speed_variance);
+		this._speed = Utils.get_randomized_parameter(init_speed, INIT_SPEED_VARIANCE);
 
 		this._state = State.NORMAL;
-		this._energy = _init_energy;
+		this._energy = INIT_ENERGY;
 		this._desire = 0.0;
 
 		this._region_mngr = null;
@@ -84,9 +84,9 @@ public abstract class Animal implements Entity, AnimalInfo {
 		this._diet = p1._diet;
 		this._energy = (p1._energy + p2._energy) / 2;
 
-		this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1, 1).scale(_random_pos_newborn * (Utils._rand.nextGaussian() + 1)));
-		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range() + p2.get_sight_range()) / 2, _sight_range_variance);
-		this._speed = Utils.get_randomized_parameter((p1.get_speed() + p2.get_speed()) / 2, _speed_variance);
+		this._pos = p1.get_position().plus(Vector2D.get_random_vector(-1, 1).scale(RANDOM_POS_NEWBORN * (Utils._rand.nextGaussian() + 1)));
+		this._sight_range = Utils.get_randomized_parameter((p1.get_sight_range() + p2.get_sight_range()) / 2, SIGHT_RANGE_VARIANCE);
+		this._speed = Utils.get_randomized_parameter((p1.get_speed() + p2.get_speed()) / 2, SPEED_VARIANCE);
 
 	}
 
@@ -148,7 +148,7 @@ public abstract class Animal implements Entity, AnimalInfo {
 		this._desire = 0.0;
 	}
 
-	void init(AnimalMapView reg_mngr) {
+	public void init(AnimalMapView reg_mngr) {
 
 		this._region_mngr = reg_mngr;
 

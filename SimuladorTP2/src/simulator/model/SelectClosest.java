@@ -18,7 +18,10 @@ public class SelectClosest implements SelectionStrategy{
 			
 			actualDistance = ani.get_position().distanceTo(a.get_position());
 			
-			if(actualDistance < closestDistance) closest = ani;
+			if(actualDistance < closestDistance) {
+				closestDistance = actualDistance;
+				closest = ani;
+			}
 		}
 		
 		return closest;
