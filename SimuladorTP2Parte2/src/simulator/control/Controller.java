@@ -25,36 +25,7 @@ public class Controller{
 	public void load_data(JSONObject data) {
 		//Load region data
 		if(data.has("regions")) {
-
-			JSONArray regiones = data.getJSONArray("regions");
-
-			int minRow, maxRow, minCol, maxCol;
-
-
-
-			for(int i = 0; i < regiones.length(); i++) {
-
-				JSONArray rows;
-				JSONArray cols;
-
-				JSONObject jo = regiones.getJSONObject(i);
-
-				JSONObject O = jo.getJSONObject("spec");
-
-				rows = jo.getJSONArray("row");
-				minRow = rows.getInt(0);
-				maxRow = rows.getInt(1);
-
-				cols = jo.getJSONArray("col");
-				minCol = cols.getInt(0);
-				maxCol = cols.getInt(1);
-
-				for(int R = minRow; R < maxRow; R++ ) {
-					for(int C = minCol; C < maxCol; C++) {
-						this._sim.set_region(R, C, O);
-					}
-				}
-			}
+			this.set_regions(data);
 		}
 		if(data.has("animals")) {
 
@@ -122,4 +93,52 @@ public class Controller{
 		
 		p.println(info);
 	}
+	
+	public void reset(int cols, int rows, int width, int height) {
+		this._sim.reset(cols, rows, width, height);
+	}
+	
+	public void set_regions(JSONObject rs) {
+		JSONArray regiones = rs.getJSONArray("regions");
+
+		for(int i = 0; i < regiones.length(); i++) {
+
+			int minRow, maxRow, minCol, maxCol;
+			
+			JSONArray rows;
+			JSONArray cols;
+
+			JSONObject jo = regiones.getJSONObject(i);
+
+			JSONObject O = jo.getJSONObject("spec");
+
+			rows = jo.getJSONArray("row");
+			minRow = rows.getInt(0);
+			maxRow = rows.getInt(1);
+
+			cols = jo.getJSONArray("col");
+			minCol = cols.getInt(0);
+			maxCol = cols.getInt(1);
+
+			for(int R = minRow; R < maxRow; R++ ) {
+				for(int C = minCol; C < maxCol; C++) {
+					this._sim.set_region(R, C, O);
+				}
+			}
+		}
+	}
+	
+	public void advance(double dt) {
+		this._sim.advance(dt);
+	}
+	
+	public void addObserver(EcoSysObserver o) {
+		this._sim.addObserver(o);
+	}
+	
+	public void removeObserver(EcoSysObserver o) {
+		this._sim.removeObserver(o);
+	}
+	
+	
 }

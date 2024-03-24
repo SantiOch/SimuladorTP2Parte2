@@ -41,4 +41,10 @@ public class DynamicSupplyRegion extends Region{
 		
 		if(Utils._rand.nextBoolean()) this._food += dt * this._factor;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return "Dynamic Region";
+	}
 }

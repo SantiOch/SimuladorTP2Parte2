@@ -1,6 +1,7 @@
 package simulator.model;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONObject;
 
@@ -9,13 +10,14 @@ import simulator.factories.Factory;
 import java.util.LinkedList;
 import java.util.Collections;
 
-public class Simulator implements JSONable{
+public class Simulator implements JSONable, Observable<EcoSysObserver>{
 	
 	private final Factory<Animal> _animals_factory;
 	private final Factory<Region> _regions_factory;
 	
-	private final RegionManager _region_manager;
-	private final List<Animal> _animal_list;
+	private List<EcoSysObserver> _observers;
+	private RegionManager _region_manager;
+	private List<Animal> _animal_list;
 	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory, Factory<Region> regions_factory) {
@@ -25,13 +27,26 @@ public class Simulator implements JSONable{
 		this._animals_factory = animals_factory;
 		this._regions_factory = regions_factory;		
 		
+		this._observers = new LinkedList<>();
 		this._region_manager = new RegionManager(cols, rows, width, height);
 		this._animal_list = new LinkedList<>();
 		this._time = 0.0;
 	}
 	
+	public void reset(int cols, int rows, int width, int height) {
+		this._region_manager = new RegionManager(cols, rows, width, height);
+		this._animal_list = new LinkedList<>();
+		this._time = 0.0;
+		for(EcoSysObserver o: this._observers) {
+			o.onReset(_time, _region_manager, new ArrayList<>(this._animal_list));
+		}
+	}
+	
 	private void set_region(int row, int col, Region r) {
 		this._region_manager.set_region(row, col, r);
+		for(EcoSysObserver o: this._observers) {
+			o.onRegionSet(row, col, _region_manager, r);
+		}
 	}
 	
 	public void set_region(int row, int col, JSONObject r_json) {
@@ -46,6 +61,9 @@ public class Simulator implements JSONable{
 	private void add_animal(Animal a) {
 		this._animal_list.add(a);
 		this._region_manager.register_animal(a);
+		for(EcoSysObserver o: this._observers) {
+			o.onAnimalAdded(_time, _region_manager, new ArrayList<>(this._animal_list), a);
+		}
 	}
 	
 	public void add_animal(JSONObject a_json) {
@@ -100,7 +118,16 @@ public class Simulator implements JSONable{
 		
 		this._animal_list.addAll(newBornAnimals);
 		
+		this.notify_on_advanced(dt);
 	}
+	
+	 private void notify_on_advanced(double dt) {
+     List<AnimalInfo> animals = new ArrayList<>(this._animal_list);
+     // para cada observador o, invocar o.onAvanced(_time, _region_mngr, animals, dt)
+     for(EcoSysObserver o: this._observers) {
+    	 o.onAvanced(_time, _region_manager, animals, dt);
+     }
+	 }
 	
 	@Override
 	public JSONObject as_JSON() {
@@ -110,5 +137,16 @@ public class Simulator implements JSONable{
 		jo.put("state", this._region_manager.as_JSON());
 		
 		return jo;
+	}
+
+	@Override
+	public void addObserver(EcoSysObserver o) {
+		this._observers.add(o);
+		o.onRegister(_time, _region_manager, new ArrayList<>(this._animal_list));
+	}
+
+	@Override
+	public void removeObserver(EcoSysObserver o) {
+		this._observers.remove(o);		
 	}
 }

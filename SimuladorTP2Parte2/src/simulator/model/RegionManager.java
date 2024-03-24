@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 import org.json.JSONArray;
@@ -209,8 +210,6 @@ public class RegionManager implements AnimalMapView{
 	//Devuelve el JSON de todas las regiones
 	public JSONObject as_JSON() {
 		
-		//TODO preguntar a Pablo, creo que está bien
-		
 		JSONObject jo = new JSONObject();
 		JSONArray ja = new JSONArray();
 		
@@ -231,6 +230,12 @@ public class RegionManager implements AnimalMapView{
 		jo.put("regions", ja);
 		
 		return jo;
+	}
+
+	@Override
+	public Iterator<RegionData> iterator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

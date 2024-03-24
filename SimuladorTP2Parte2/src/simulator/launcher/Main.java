@@ -1,35 +1,28 @@
  package simulator.launcher;
 
-import simulator.model.*;
-import simulator.factories.*;
-import simulator.control.*;
-import simulator.factories.Factory;
+ import org.apache.commons.cli.*;
+ import org.json.JSONObject;
+ import org.json.JSONTokener;
+ import simulator.control.Controller;
+ import simulator.factories.*;
+ import simulator.misc.Utils;
+ import simulator.model.Animal;
+ import simulator.model.Region;
+ import simulator.model.SelectionStrategy;
+ import simulator.model.Simulator;
 
-import java.util.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import simulator.misc.Utils;
-import simulator.model.Animal;
-import simulator.model.Region;
-import simulator.model.SelectionStrategy;
+ import java.io.FileInputStream;
+ import java.io.FileOutputStream;
+ import java.io.InputStream;
+ import java.io.OutputStream;
+ import java.util.ArrayList;
+ import java.util.List;
 //import simulator.view.SimpleObjectViewer;
 
 public class Main {
 
-	private static Factory<Region> reg_factory;
-	private static Factory<Animal> ani_factory;
+	public static Factory<Region> _regions_factory;
+	public static Factory<Animal> _animals_factory;
 
 	private enum ExecMode {
 		BATCH("batch", "Batch mode"), GUI("gui", "Graphical User Interface mode");
@@ -53,8 +46,8 @@ public class Main {
 
 	// default values for some parameters
 	//
-	private final static Double _default_time = 10.0; // in seconds
-	private final static Double _default_delta_time = 0.03; // in seconds
+	public final static Double _default_time = 10.0; // in seconds
+	public final static Double _default_delta_time = 0.03; // in seconds
 
 	// some attributes to stores values corresponding to command-line parameters
 	//
@@ -198,14 +191,14 @@ public class Main {
 		animal_builders.add(new WolfBuilder(selection_strategy_factory));
 		animal_builders.add(new SheepBuilder(selection_strategy_factory));
 		
-		ani_factory = new BuilderBasedFactory<>(animal_builders);
+		_animals_factory = new BuilderBasedFactory<>(animal_builders);
 		
 		List<Builder<Region>> region_builders = new ArrayList<>();
 
 		region_builders.add(new DefaultRegionBuilder());
 		region_builders.add(new DynamicSupplyRegionBuilder());
 		
-		reg_factory = new BuilderBasedFactory<>(region_builders);
+		_regions_factory = new BuilderBasedFactory<>(region_builders);
 
 	}
 
@@ -222,7 +215,7 @@ public class Main {
 		
 		JSONObject jo = load_JSON_file(is);
 
-		Simulator sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), ani_factory, reg_factory);
+		Simulator sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), _animals_factory, _regions_factory);
 		
 		Controller con = new Controller(sim);
 		

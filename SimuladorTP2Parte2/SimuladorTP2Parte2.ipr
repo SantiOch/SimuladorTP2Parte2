@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SimuladorTP2" options="--add-exports java.xml.crypto/org.jcp.xml.dsig.internal.dom=ALL-UNNAMED" />
+    </option>
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SimuladorTP2.iml" filepath="$PROJECT_DIR$/SimuladorTP2.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="commons-cli-1.4">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-cli-1.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/viewer.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/json.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/json.jar!/doc" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/json.jar!/" />
+      </SOURCES>
+    </library>
+  </component>
+</project>
