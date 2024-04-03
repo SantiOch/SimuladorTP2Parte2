@@ -11,10 +11,16 @@ import simulator.model.MapInfo;
 import simulator.model.RegionInfo;
 
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
-	// TODO definir atributos necesarios
+	// TODO definir atributos necesario
+	private Controller _ctrl;
+	
+	
 	RegionsTableModel(Controller ctrl) {
+		super();
+		_ctrl = ctrl;
 		// TODO inicializar estructuras de datos correspondientes
 		// TODO registrar this como observador
+		ctrl.addObserver(this);
 	}
 	//TODO el resto de métodos van aquí... 
 

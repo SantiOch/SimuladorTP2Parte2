@@ -10,14 +10,14 @@ import simulator.factories.Factory;
 import java.util.LinkedList;
 import java.util.Collections;
 
-public class Simulator implements JSONable, Observable<EcoSysObserver>{
+public class Simulator implements  JSONable, Observable<EcoSysObserver>{
 	
 	private final Factory<Animal> _animals_factory;
 	private final Factory<Region> _regions_factory;
 	
 	private List<EcoSysObserver> _observers;
-	private RegionManager _region_manager;
 	private List<Animal> _animal_list;
+	private RegionManager _region_manager;
 	private double _time;
 	
 	public Simulator(int cols, int rows, int width, int height, Factory<Animal> animals_factory, Factory<Region> regions_factory) {
@@ -28,8 +28,8 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 		this._regions_factory = regions_factory;		
 		
 		this._observers = new LinkedList<>();
-		this._region_manager = new RegionManager(cols, rows, width, height);
 		this._animal_list = new LinkedList<>();
+		this._region_manager = new RegionManager(cols, rows, width, height);
 		this._time = 0.0;
 	}
 	
@@ -123,6 +123,7 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 	
 	 private void notify_on_advanced(double dt) {
      List<AnimalInfo> animals = new ArrayList<>(this._animal_list);
+     
      // para cada observador o, invocar o.onAvanced(_time, _region_mngr, animals, dt)
      for(EcoSysObserver o: this._observers) {
     	 o.onAvanced(_time, _region_manager, animals, dt);
@@ -141,8 +142,10 @@ public class Simulator implements JSONable, Observable<EcoSysObserver>{
 
 	@Override
 	public void addObserver(EcoSysObserver o) {
-		this._observers.add(o);
-		o.onRegister(_time, _region_manager, new ArrayList<>(this._animal_list));
+		if(!_observers.contains(o)) {
+			this._observers.add(o);
+			o.onRegister(_time, _region_manager, new ArrayList<>(this._animal_list));
+		}
 	}
 
 	@Override

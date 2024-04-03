@@ -24,9 +24,11 @@ class MapWindow extends JFrame implements EcoSysObserver {
 		super("[MAP VIEWER]");
 		_ctrl = ctrl;
 		_parent = parent;
+		ctrl.addObserver(this);
 		intiGUI();
-		// TODO registrar this como observador
+
 	}
+
 	private void intiGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		// TODO poner contentPane como mainPanel
@@ -81,6 +83,7 @@ class MapWindow extends JFrame implements EcoSysObserver {
 				// TODO Auto-generated method stub
 
 			}});
+
 		pack();
 		if (_parent != null)
 			setLocation(

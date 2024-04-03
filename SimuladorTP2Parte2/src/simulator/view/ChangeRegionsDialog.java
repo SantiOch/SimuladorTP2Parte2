@@ -47,12 +47,13 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		super((Frame)null, true);
 		_ctrl = ctrl;
 		initGUI();
-		// TODO registrar this como observer;
+		ctrl.addObserver(this);
 	}
 	private void initGUI() {
 		setTitle("Change Regions");
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); setContentPane(mainPanel);
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); 
+		setContentPane(mainPanel);
 		// TODO crea varios paneles para organizar los componentes visuales en el
 		// dialogo, y añadelos al mainpanel. P.ej., uno para el texto de ayuda,
 		// uno para la tabla, uno para los combobox, y uno para los botones.
@@ -93,6 +94,7 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		pack();
 		setVisible(true);
 	}
+	
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		// TODO Auto-generated method stub

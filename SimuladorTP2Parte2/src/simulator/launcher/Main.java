@@ -10,13 +10,18 @@
  import simulator.model.Region;
  import simulator.model.SelectionStrategy;
  import simulator.model.Simulator;
+import simulator.view.ControlPanel;
+import simulator.view.MainWindow;
 
+import java.io.FileOutputStream;
  import java.io.FileInputStream;
- import java.io.FileOutputStream;
  import java.io.InputStream;
  import java.io.OutputStream;
  import java.util.ArrayList;
  import java.util.List;
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 //import simulator.view.SimpleObjectViewer;
 
 public class Main {
@@ -46,7 +51,7 @@ public class Main {
 
 	// default values for some parameters
 	//
-	public final static Double _default_time = 10.0; // in seconds
+	public final static Double _default_time = 10.000; // in seconds
 	public final static Double _default_delta_time = 0.03; // in seconds
 
 	// some attributes to stores values corresponding to command-line parameters
@@ -218,9 +223,12 @@ public class Main {
 		Simulator sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), _animals_factory, _regions_factory);
 		
 		Controller con = new Controller(sim);
-		
-		con.load_data(jo);
 
+		con.load_data(jo);
+		
+//		SwingUtilities.invokeLater(() -> new MainWindow(con));
+		
+//
 		con.run(_time, _dt, _sv, os);
 		
 		os.close();
@@ -240,7 +248,9 @@ public class Main {
 	}
 
 	private static void start(String[] args) throws Exception {
-
+		
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		
 		init_factories(); 
 		parse_args(args); 
 		switch (_mode) { 

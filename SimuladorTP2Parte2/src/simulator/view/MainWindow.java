@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
 		
 		// TODO crear la tabla de regiones.
 		//           Usa setPreferredSize(new Dimension(500, 250)) para fijar su tamaño
-		InfoTable regions = new InfoTable("Species", new RegionsTableModel(_ctrl));
+		InfoTable regions = new InfoTable("Regions", new RegionsTableModel(_ctrl));
 		regions.setPreferredSize(new Dimension(500, 250));
 		contentPanel.add(regions);
 		
@@ -58,7 +58,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+				ViewUtils.quit(MainWindow.this);				
 			}
 
 			@Override
@@ -87,7 +87,6 @@ public class MainWindow extends JFrame {
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
@@ -95,7 +94,6 @@ public class MainWindow extends JFrame {
 				// TODO Auto-generated method stub
 				
 			}
-			
 		});
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); 

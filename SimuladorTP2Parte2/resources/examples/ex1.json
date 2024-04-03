@@ -18,11 +18,11 @@
     "spec" : {
       "type" : "wolf",
       "data" : {
-          "hunt_strategy" : {
-            "type" : "closest"
-          }
-        }
-      }
+      "mate_strategy" :{
+       "type" : "closest"
+       }
+       }
     }
+  }
    ]
 }

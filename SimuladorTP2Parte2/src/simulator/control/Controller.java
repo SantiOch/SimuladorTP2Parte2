@@ -34,7 +34,6 @@ public class Controller{
 			for(int i = 0; i < animales.length(); i++) {
 
 				JSONObject jo = animales.getJSONObject(i);
-
 				int N = jo.getInt("amount");
 				JSONObject O = jo.getJSONObject("spec");
 				for(int j = 0; j < N; j++) {
