@@ -135,7 +135,7 @@ public class ControlPanel extends JPanel {
 			_stopped = false;
 			Double dt = Double.parseDouble(_dt.getText());
 			Integer time = (Integer) _steps.getValue();
-			run_sim(10, dt);
+			run_sim(time, dt);
 
 		});
 		_toolBar.add(_playButton);

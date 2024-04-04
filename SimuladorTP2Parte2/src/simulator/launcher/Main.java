@@ -51,7 +51,7 @@ public class Main {
 
 	// default values for some parameters
 	//
-	public final static Double _default_time = 10.000; // in seconds
+	public final static Double _default_time = 10.0; // in seconds
 	public final static Double _default_delta_time = 0.03; // in seconds
 
 	// some attributes to stores values corresponding to command-line parameters
@@ -226,12 +226,12 @@ public class Main {
 
 		con.load_data(jo);
 		
-//		SwingUtilities.invokeLater(() -> new MainWindow(con));
+		SwingUtilities.invokeLater(() -> new MainWindow(con));
 		
 //
-		con.run(_time, _dt, _sv, os);
-		
-		os.close();
+//		con.run(_time, _dt, _sv, os);
+//		
+//		os.close();
 		
 		/* Completar el método start_batch_mode para que haga lo siguiente 
 		 * (1) cargar el archivo de entrada en un JSONObject; 
