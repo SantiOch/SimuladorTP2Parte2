@@ -23,11 +23,13 @@ import org.json.JSONTokener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Random;
 
 import javax.swing.JLabel;
 
 import simulator.control.Controller;
 import simulator.launcher.Main;
+import simulator.misc.Utils;
 
 @SuppressWarnings("serial")
 public class ControlPanel extends JPanel {
@@ -98,7 +100,8 @@ public class ControlPanel extends JPanel {
 					_ctrl.load_data(jo);
 					
 				}catch(Exception exc) {
-					ViewUtils.showErrorMsg("Error cargando el archivo de entrada");
+					exc.printStackTrace();
+					ViewUtils.showErrorMsg("Error cargando el archivo de entrada" + exc.getMessage());
 				}
 			}
 		});
@@ -111,7 +114,7 @@ public class ControlPanel extends JPanel {
 		_viewerButton.setToolTipText("Show map viewer");
 		_viewerButton.setIcon(new ImageIcon("resources/icons/viewer.png"));
 		_viewerButton.addActionListener((e)-> {
-			SwingUtilities.invokeLater(() -> new MapWindow(null, _ctrl));
+			SwingUtilities.invokeLater(() -> new MapViewer());
 		});
 
 		_toolBar.add(_viewerButton);
@@ -181,11 +184,13 @@ public class ControlPanel extends JPanel {
 		if (n > 0 && !_stopped) {
 			try {
 				_ctrl.advance(dt);
+				Thread.sleep(1);
 				SwingUtilities.invokeLater(() -> run_sim(n - 1, dt)); 
 
 			} catch (Exception e) {
 
 				ViewUtils.showErrorMsg(e.getMessage());
+				e.printStackTrace();
 				enableButtons();
 				_stopped = true;
 			}

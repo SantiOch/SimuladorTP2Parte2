@@ -99,13 +99,13 @@ public class RegionManager implements AnimalMapView{
 		
 		//Ver que no se salgan del mapa, si se salen, se establecen en los límites
 		regMinWidthIndex = Math.max(regMinWidthIndex, 0);
-		regMaxWidthIndex = Math.min(regMaxWidthIndex, this._cols);
+		regMaxWidthIndex = Math.min(regMaxWidthIndex, this._cols - 1);
 		regMinHeightIndex = Math.max(regMinHeightIndex, 0);
-		regMaxHeightIndex = Math.min(regMaxHeightIndex, this._rows);
+		regMaxHeightIndex = Math.min(regMaxHeightIndex, this._rows - 1);
 		
 		//Recorre todas las regiones dentro del campo visual y las añade a la lista auxiliar
-		for(int i = regMinHeightIndex; i < regMaxHeightIndex; i++) {
-			for(int j = regMinWidthIndex; j < regMaxWidthIndex; j++) {
+		for(int i = regMinHeightIndex; i <= regMaxHeightIndex; i++) {
+			for(int j = regMinWidthIndex; j <= regMaxWidthIndex; j++) {
 				for(Animal a: this._region[i][j].getAnimals()) {
 					if(a != e && a.get_position().distanceTo(e.get_position()) < range && filter.test(a)) {
 						listAux.add(a);
@@ -132,7 +132,7 @@ public class RegionManager implements AnimalMapView{
 		//Cambia todos los animales que estaban antes en esa región a la nueva
 		Region old = this._region[row][col];
 		
-		for(Animal a: r.animalList) {
+		for(Animal a: old.animalList) {
 			this._animal_region.remove(a);
 			this._animal_region.put(a, r);
 		}
@@ -184,7 +184,8 @@ public class RegionManager implements AnimalMapView{
 
 	//Da comida al animal que la pide
 	@Override
-	public double get_food(Animal a, double dt) {		
+	public double get_food(Animal a, double dt) {	
+		
 		return this._animal_region.get(a).get_food(a, dt);
 	}
 	
@@ -234,8 +235,33 @@ public class RegionManager implements AnimalMapView{
 
 	@Override
 	public Iterator<RegionData> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return new Iterator<RegionData>(){
+
+			int row = 0;
+			int col = 0;
+			
+			@Override
+			public boolean hasNext() {
+				return row < _rows && col < _cols;
+			}
+
+			@Override
+			public RegionData next() {
+				
+				RegionData r = new RegionData(row, col, _region[row][col]);
+				
+				col++;
+				
+				if(col == _cols) {
+					row++;
+					col = 0;
+				}
+				
+				return r;
+			}
+			
+		};
 	}
 	
 }

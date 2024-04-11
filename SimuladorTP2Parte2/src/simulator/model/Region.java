@@ -13,6 +13,9 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 
 	protected List<Animal> animalList;
 	
+	@Override
+	public abstract String toString();
+	
 	public Region() {
 		this.animalList = new LinkedList<>();
 	}
@@ -29,9 +32,10 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo{
 		return Collections.unmodifiableList(this.animalList);
 	}
 	
+	@Override
 	public List<AnimalInfo> getAnimalsInfo() {
 		return new ArrayList<>(this.animalList); // se puede usar Collections.unmodifiableList(_animals);
-		  }
+	}
 	
 	@Override
 	public JSONObject as_JSON() {

@@ -21,7 +21,7 @@ public class Controller{
 	public Controller(Simulator sim) {
 		this._sim = sim;
 	}
-
+	
 	public void load_data(JSONObject data) {
 		//Load region data
 		if(data.has("regions")) {
@@ -118,9 +118,9 @@ public class Controller{
 			cols = jo.getJSONArray("col");
 			minCol = cols.getInt(0);
 			maxCol = cols.getInt(1);
-
-			for(int R = minRow; R < maxRow; R++ ) {
-				for(int C = minCol; C < maxCol; C++) {
+			
+			for(int R = minRow; R <= maxRow; R++ ) {
+				for(int C = minCol; C <= maxCol; C++) {
 					this._sim.set_region(R, C, O);
 				}
 			}

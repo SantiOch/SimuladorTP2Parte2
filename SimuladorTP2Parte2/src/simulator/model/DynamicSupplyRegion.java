@@ -12,6 +12,7 @@ public class DynamicSupplyRegion extends Region{
 	private final double _factor;
 	
 	public DynamicSupplyRegion(double food, double factor) {
+		super();
 		this._food = food;
 		this._factor = factor;
 	}
@@ -45,6 +46,6 @@ public class DynamicSupplyRegion extends Region{
 	@Override
 	public String toString() {
 		
-		return "Dynamic Region";
+		return "dynamic";
 	}
 }

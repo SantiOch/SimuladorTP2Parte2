@@ -6,6 +6,10 @@ public class DefaultRegion extends Region{
 	private final static double _herbivores_subtraction = 5.0;
 	private final static double _food_multiplier = 2.0;
 	
+	public DefaultRegion() {
+		super();
+	}
+	
 	@Override
 	public double get_food(Animal a, double dt) {
 		
@@ -27,6 +31,6 @@ public class DefaultRegion extends Region{
 	@Override
 	public String toString() {
 		
-		return "Default Region";
+		return "default";
 	}
 }

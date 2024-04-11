@@ -2,7 +2,7 @@
   "width" : 800,
   "height" : 600,
   "cols" : 20,
-  "rows" : 15,
+  "rows" : 20,
   "animals" : [ {
     "amount" : 100,
     "spec" : {
@@ -17,7 +17,7 @@
     }
   } ],
   "regions" : [ {
-    "row" : [ 7, 7 ],
+    "row" : [ 7, 8 ],
     "col" : [ 0, 19 ],
     "spec" : {
       "type" : "dynamic",
