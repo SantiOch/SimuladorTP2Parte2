@@ -9,14 +9,14 @@ public class DynamicSupplyRegion extends Region{
 	private final static double _food_multiplier = 2.0;
 
 	private double _food;
-	private final double _factor;
+	private double _factor;
 	
 	public DynamicSupplyRegion(double food, double factor) {
 		super();
 		this._food = food;
 		this._factor = factor;
 	}
-	
+
 	@Override
 	public double get_food(Animal a, double dt) {
 		

@@ -69,7 +69,7 @@ public class Wolf extends Animal{
 			break;
 		}
 
-		//Ajustar posición si está fuera del mapa
+		// Ajustar posición si está fuera del mapa
 		if(super.isOut()) {
 			this._pos = adjustPosition(this.get_position().getX(), this.get_position().getY());
 		}
@@ -107,34 +107,35 @@ public class Wolf extends Animal{
 
 				if(this._baby == null && Utils._rand.nextDouble() < BABY_PROBABILITY) {
 
-					//Crea un nuevo bebé con probabilidad de 0.9
+					// Crea un nuevo bebé con probabilidad de 0.9
 					this._baby = new Wolf(this, this._mate_target);
 
 					this._energy -= BABY_ENERGY;
-					
+
 				}
-				this._mate_target.resetTarget();
+				
 				this._mate_target = null;
-				//Actualiza estado si está con más de 50 de energía
+				
+				// Actualiza estado si está con más de 50 de energía
 				if(this._energy < CHANGE_STATE_ENERGY) {
 					this._state = State.HUNGER;
 					this._hunt_target = null;
-                }
+				}
 				if(this._desire < MATE_MINIMUM) {
 					this._state = State.NORMAL;
 					this._hunt_target = null;
-                }
+				}
 			}
 		}
 	}
 
 	private void updateHunger(double dt) {
 
-		if(this._hunt_target == null //No tiene hunt target
-				|| this._hunt_target._state == State.DEAD //Ha muerto
-				|| this._hunt_target.get_position().distanceTo(this._pos) > this.get_sight_range()/*Está fuera del campo visual*/) {
-			
-			//Busca a un nuevo animal para cazarlo
+		if(this._hunt_target == null // No tiene hunt target
+				|| this._hunt_target._state == State.DEAD // Ha muerto
+				|| this._hunt_target.get_position().distanceTo(this._pos) > this.get_sight_range()/* Está fuera del campo visual */) {
+
+			// Busca a un nuevo animal para cazarlo
 			this._hunt_target = this._hunting_strategy.select(this, this.get_region_mngr().get_animals_in_range(this,
 					(Animal other)-> other.get_diet() == Diet.HERBIVORE));
 		}
@@ -152,7 +153,8 @@ public class Wolf extends Animal{
 			super.advanceRunning(dt, RUNNING_MULTIPLIER, SPEED_VARIANCE,
 					ENERGY_MULTIPLIER, RUNNING_TIREDNESS_MULTIPLIER, MIN_ENERGY,
 					MAX_ENERGY, DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE);
-			//Ver si mata o no al hunt target
+
+			// Ver si mata o no al hunt target
 			if(this._pos.distanceTo(this._hunt_target.get_position()) < MIN_DISTANCE) {
 
 				this._hunt_target._state = State.DEAD;
@@ -164,36 +166,36 @@ public class Wolf extends Animal{
 				if(this._energy > MAX_ENERGY) this._energy = MAX_ENERGY;
 			}
 
-			//Actualiza estado si está con más de 50 de energía
+			// Actualiza estado si está con más de 50 de energía
 			if(this._energy > CHANGE_STATE_ENERGY) {
 				if(this._desire > MATE_MINIMUM) {
 					this._state = State.MATE;
 
-                }else {
+				}else {
 					this._state = State.NORMAL;
-                }
-                this._hunt_target = null;
-                this._mate_target = null;
-            }
+				}
+				this._hunt_target = null;
+				this._mate_target = null;
+			}
 		}
 	}
 
 	private void updateNormal(double dt) {
 
-		//Avanzar
+		// Avanzar
 		super.advance(dt, MIN_DISTANCE,
 				MAX_ENERGY, MIN_ENERGY, ENERGY_MULTIPLIER,
 				DESIRE_MULTIPLIER, MIN_DESIRE, MAX_DESIRE, SPEED_VARIANCE);
 
 		if(this._energy < CHANGE_STATE_ENERGY) {
 
-			//Cambio de estado a HUNGER y cambio de objetivo a null
+			// Cambio de estado a HUNGER y cambio de objetivo a null
 			this._state = State.HUNGER;
 			this._mate_target = null; 
 
 		}else if( this._desire > MATE_MINIMUM) {
 
-			//Cambio de estado a MATE y cambio de objetivo a null
+			// Cambio de estado a MATE y cambio de objetivo a null
 			this._state = State.MATE;
 			this._hunt_target = null;
 			this._mate_target = null;

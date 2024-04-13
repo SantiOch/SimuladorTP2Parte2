@@ -1,24 +1,23 @@
- package simulator.launcher;
+package simulator.launcher;
 
- import org.apache.commons.cli.*;
- import org.json.JSONObject;
- import org.json.JSONTokener;
- import simulator.control.Controller;
- import simulator.factories.*;
- import simulator.misc.Utils;
- import simulator.model.Animal;
- import simulator.model.Region;
- import simulator.model.SelectionStrategy;
- import simulator.model.Simulator;
-import simulator.view.ControlPanel;
+import org.apache.commons.cli.*;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import simulator.control.Controller;
+import simulator.factories.*;
+import simulator.misc.Utils;
+import simulator.model.Animal;
+import simulator.model.Region;
+import simulator.model.SelectionStrategy;
+import simulator.model.Simulator;
 import simulator.view.MainWindow;
 
 import java.io.FileOutputStream;
- import java.io.FileInputStream;
- import java.io.InputStream;
- import java.io.OutputStream;
- import java.util.ArrayList;
- import java.util.List;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -53,7 +52,14 @@ public class Main {
 	//
 	public final static Double _default_time = 10.0; // in seconds
 	public final static Double _default_delta_time = 0.03; // in seconds
-
+	
+	// default values for the simulator in case there is no _in_file
+	//
+	public final static int _default_rows = 15;
+	public final static int _default_cols = 20;
+	public final static int _default_width = 800;
+	public final static int _default_height = 600;
+	
 	// some attributes to stores values corresponding to command-line parameters
 	//
 	private static Double _time = null;
@@ -61,7 +67,7 @@ public class Main {
 	private static String _out_file = null;
 	private static boolean _sv = false;
 	private static Double _dt = null;
-	private static ExecMode _mode = ExecMode.BATCH;
+	private static ExecMode _mode = ExecMode.GUI;
 
 	private static void parse_args(String[] args) {
 
@@ -74,8 +80,9 @@ public class Main {
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine line = parser.parse(cmdLineOptions, args);
-			
-			
+
+
+			parse_mode_option(line);
 			parse_help_option(line, cmdLineOptions);
 			parse_in_file_option(line);
 			parse_time_option(line);
@@ -108,25 +115,35 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message.").build());
 
 		// input file
-		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("A configuration file.").build());
+		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("A configuration file (optional in GUI mode).").build());
 
 		// delta time
 		cmdLineOptions.addOption(Option.builder("dt").longOpt("delta-time").hasArg()
 				.desc("A double representing actual time, in seconds, per simulation step. Default value: " + _default_delta_time + ".").build());
 
 		// output file
-		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Output file, where output is written.").build());
+		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("A file where output is written (only for BATCH mode).").build());
 
 		// simple viewer
-		cmdLineOptions.addOption(Option.builder("sv").longOpt("simple-viewer").desc("Show the viewer window in console mode.").build());
+		cmdLineOptions.addOption(Option.builder("sv").longOpt("simple-viewer").desc("Show the viewer window in BATCH mode.").build());
+
+		// execMode
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Execution Mode. Possible values: "
+				+ String.format("'%s' (%s), ", ExecMode.BATCH.get_tag(), ExecMode.BATCH.get_desc())
+				+	String.format("'%s' (%s). ", ExecMode.GUI.get_tag(), ExecMode.GUI.get_desc())
+				+ "Default value: 'gui'.").build());
 
 		// steps
 		cmdLineOptions.addOption(Option.builder("t").longOpt("time").hasArg()
-				.desc("An real number representing the total simulation time in seconds. Default value: "
-						+ _default_time + ".")
+				.desc(String.format("An real number representing the total simulation\n"
+						+ "time in seconds. Default value: %,.1f. (only for BATCH mode).", _default_time))
 				.build());
 
 		return cmdLineOptions;
+	}
+
+	private static void parse_mode_option(CommandLine line) {
+		if(line.hasOption("m")) _mode = ExecMode.valueOf(line.getOptionValue("m").toUpperCase());
 	}
 
 	private static void parse_help_option(CommandLine line, Options cmdLineOptions) {
@@ -153,7 +170,7 @@ public class Main {
 			throw new ParseException("Invalid value for time: " + t);
 		}
 	}
-	
+
 	private static void parse_simple_viewer_option(CommandLine line) {		
 		if(line.hasOption("sv")) {
 			_sv = true;
@@ -175,34 +192,34 @@ public class Main {
 		if (_mode == ExecMode.BATCH && _out_file == null) {
 			throw new ParseException("In batch mode an output configuration file is required");
 		}
-		
+
 	}
 
 	private static void init_factories() {
 
 		//Completar el método init_factories para inicializar las factorías y almacenarlas en los atributos correspondientes.
- 
+
 		Factory<SelectionStrategy> selection_strategy_factory;
 		List<Builder<SelectionStrategy>> selection_strategy_builders = new ArrayList<>();
-		
+
 		selection_strategy_builders.add(new SelectFirstBuilder());
 		selection_strategy_builders.add(new SelectClosestBuilder()); 
 		selection_strategy_builders.add(new SelectYoungestBuilder()); 
 
 		selection_strategy_factory = new BuilderBasedFactory<>(selection_strategy_builders);
-		
+
 		List<Builder<Animal>> animal_builders = new ArrayList<>();
 
 		animal_builders.add(new WolfBuilder(selection_strategy_factory));
 		animal_builders.add(new SheepBuilder(selection_strategy_factory));
-		
+
 		_animals_factory = new BuilderBasedFactory<>(animal_builders);
-		
+
 		List<Builder<Region>> region_builders = new ArrayList<>();
 
 		region_builders.add(new DefaultRegionBuilder());
 		region_builders.add(new DynamicSupplyRegionBuilder());
-		
+
 		_regions_factory = new BuilderBasedFactory<>(region_builders);
 
 	}
@@ -213,26 +230,23 @@ public class Main {
 
 
 	private static void start_batch_mode() throws Exception {
-		
+
 		InputStream is = new FileInputStream(_in_file);
 
 		OutputStream os = new FileOutputStream(_out_file);
-		
+
 		JSONObject jo = load_JSON_file(is);
 
 		Simulator sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), _animals_factory, _regions_factory);
-		
+
 		Controller con = new Controller(sim);
 
 		con.load_data(jo);
-		
-		SwingUtilities.invokeLater(() -> new MainWindow(con));
-		
-//
-//		con.run(_time, _dt, _sv, os);
-//		
-//		os.close();
-		
+
+		con.run(_time, _dt, _sv, os);
+
+		os.close();
+
 		/* Completar el método start_batch_mode para que haga lo siguiente 
 		 * (1) cargar el archivo de entrada en un JSONObject; 
 		 * (2) crear el archivo de salida; 
@@ -244,13 +258,36 @@ public class Main {
 	}
 
 	private static void start_GUI_mode() throws Exception {
-		throw new UnsupportedOperationException("GUI mode is not ready yet ...");
+
+		Simulator sim;
+		Controller con;
+
+		if(_in_file != null) {
+
+			InputStream is = new FileInputStream(_in_file);
+
+			JSONObject jo = load_JSON_file(is);
+
+			sim = new Simulator(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"), _animals_factory, _regions_factory);
+
+			con = new Controller(sim);
+
+			con.load_data(jo);
+
+		}else {
+
+			sim = new Simulator(_default_cols, _default_rows, _default_width, _default_height, _animals_factory, _regions_factory);
+
+			con = new Controller(sim);
+		}
+
+		SwingUtilities.invokeLater(() -> new MainWindow(con));
 	}
 
 	private static void start(String[] args) throws Exception {
-		
+
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		
+
 		init_factories(); 
 		parse_args(args); 
 		switch (_mode) { 

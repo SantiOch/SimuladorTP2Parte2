@@ -15,12 +15,11 @@ import simulator.model.RegionInfo;
 
 @SuppressWarnings("serial")
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
-	// TODO definir atributos necesario
+
 	private List<String> _colNames;
 	private List<RegionData> _regions;
 	private int _rowCount;
 
-	
 	RegionsTableModel(Controller ctrl) {
 		super();
 		_colNames = new LinkedList<>();
@@ -29,19 +28,13 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	}
 
 	@Override
-	public String getColumnName(int col) {
-		return _colNames.get(col);
-	}
+	public String getColumnName(int col) { return _colNames.get(col); }
 	
 	@Override
-	public int getRowCount() {
-		return _rowCount;
-	}
+	public int getRowCount() { return _rowCount; }
 
 	@Override
-	public int getColumnCount() {
-		return _colNames.size();
-	}
+	public int getColumnCount() { return _colNames.size(); }
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
@@ -58,6 +51,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		}
 	}
 
+	// Añade los titulos de las columnas y las regiones
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
 		this._rowCount = map.get_rows() * map.get_cols();
@@ -70,6 +64,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		for(Diet d: Diet.values()) _colNames.add(d.toString());
 	}
 
+	// Cambia el numero de columnas y mete la información de las regiones
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
 		this._rowCount = map.get_rows() * map.get_cols();
@@ -81,30 +76,24 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		}
 
 		fireTableDataChanged();
-
 	}
 	
-
+	// No hace nada
 	@Override
-	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		// TODO Auto-generated method stub
+	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) { }
 
-	}
-
+	// Cambia la región antigua con la nueva
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
 		
 		int index = row * map.get_cols() + col;
-				
-		this._regions.remove(index);
-		
-		this._regions.add(index, new RegionData(row, col,  r));
 
+		this._regions.set(index, new RegionData(row, col,  r));
 	}
 
+	// Vuelve a pintar la tabla
 	@Override
 	public void onAvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		// TODO Auto-generated method stub
 		fireTableDataChanged();
 	}
 }

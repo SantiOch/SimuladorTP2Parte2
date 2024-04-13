@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import simulator.model.*;
@@ -23,7 +24,8 @@ public class Controller{
 	}
 	
 	public void load_data(JSONObject data) {
-		//Load region data
+		
+		// Load region data
 		if(data.has("regions")) {
 			this.set_regions(data);
 		}

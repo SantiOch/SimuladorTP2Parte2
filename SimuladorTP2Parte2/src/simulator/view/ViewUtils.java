@@ -58,5 +58,4 @@ class ViewUtils {
 	static Color get_color(Object s) {
 		return new Color(s.hashCode());
 	}
-
 }
