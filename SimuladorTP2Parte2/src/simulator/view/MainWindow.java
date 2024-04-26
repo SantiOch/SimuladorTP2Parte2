@@ -36,11 +36,11 @@ public class MainWindow extends JFrame {
 
 		// Crear ControlPanel y añadirlo en PAGE_START de mainPanel
 		ControlPanel c = new ControlPanel(_ctrl);
-		this.add(c, BorderLayout.PAGE_START);;
+		add(c, BorderLayout.PAGE_START);;
 		
 		// Crear StatusBar y añadirlo en PAGE_END de mainPanel
 		StatusBar status = new StatusBar(_ctrl);
-		this.add(status, BorderLayout.PAGE_END);
+		add(status, BorderLayout.PAGE_END);
 		
 		// Definición del panel de tablas (usa un BoxLayout vertical)
 		JPanel contentPanel = new JPanel();
@@ -57,7 +57,7 @@ public class MainWindow extends JFrame {
 		regions.setPreferredSize(new Dimension(500, 250));
 		contentPanel.add(regions);
 
-		this.addWindowListener(new WindowListener() {
+		addWindowListener(new WindowListener() {
 
 			@Override
 			public void windowClosing(WindowEvent e) { ViewUtils.quit(MainWindow.this); }

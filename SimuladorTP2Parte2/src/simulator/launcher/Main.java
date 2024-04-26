@@ -53,7 +53,7 @@ public class Main {
 	public final static Double _default_time = 10.0; // in seconds
 	public final static Double _default_delta_time = 0.03; // in seconds
 	
-	// default values for the simulator in case there is no _in_file
+	// default values for the simulator in case there is no input file
 	//
 	public final static int _default_rows = 15;
 	public final static int _default_cols = 20;

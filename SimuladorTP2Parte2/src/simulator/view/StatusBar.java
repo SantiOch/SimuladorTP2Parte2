@@ -30,30 +30,30 @@ class StatusBar extends JPanel implements EcoSysObserver {
 	
 	private void initGUI() {
 
-		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		this.setBorder(BorderFactory.createBevelBorder(1));
+		setLayout(new FlowLayout(FlowLayout.LEFT));
+		setBorder(BorderFactory.createBevelBorder(1));
 		
 		// Crea el JLabel del tiempo y lo pone en la barra
 		_time = new JLabel();
-		this.add(_time);
+		add(_time);
 		
 		// Separadores
 		JSeparator s = new JSeparator(JSeparator.VERTICAL); 
 		s.setPreferredSize(new Dimension(10, 20));
-		this.add(s);
+		add(s);
 		
 		// Crea el JLabel de animales y lo pone en la barra
 		_total_animals = new JLabel();
-		this.add(_total_animals);
+		add(_total_animals);
 		
 		// Separadores
 		JSeparator s2 = new JSeparator(JSeparator.VERTICAL); 
 		s2.setPreferredSize(new Dimension(10, 20));
-		this.add(s2);		
+		add(s2);		
 		
 		// Crea el JLabel de la dimensión y lo pone en la barra
 		_dim = new JLabel();
-		this.add(_dim);
+		add(_dim);
 	}
 	
 	// Inicia los JLabel del tiempo, animales y dimensión

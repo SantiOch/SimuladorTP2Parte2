@@ -1,6 +1,3 @@
 package simulator.model;
 
-public enum Diet {
-	HERBIVORE, CARNIVORE, OMNI
-	
-}
+public enum Diet { HERBIVORE, CARNIVORE }

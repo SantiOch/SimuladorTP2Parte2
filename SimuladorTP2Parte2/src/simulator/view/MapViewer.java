@@ -221,16 +221,16 @@ public class MapViewer extends AbstractMapViewer {
 	public void reset(double time, MapInfo map, List<AnimalInfo> animals) {
 
 		// Actualizar los atributos _width, _height, _cols, _rows, etc.
-		this._cols = map.get_cols();
-		this._rows = map.get_rows();
+		_cols = map.get_cols();
+		_rows = map.get_rows();
 
-		this._height = map.get_height();
-		this._width = map.get_width();
+		_height = map.get_height();
+		_width = map.get_width();
 
-		this._rwidth = map.get_region_width();
-		this._rheight = map.get_region_height();
+		_rwidth = map.get_region_width();
+		_rheight = map.get_region_height();
 
-		this._objs = animals;
+		_objs = animals;
 
 		// Esto cambia el tamaño del componente, y así cambia el tamaño de la ventana
 		// porque en MapWindow llamamos a pack() después de llamar a reset

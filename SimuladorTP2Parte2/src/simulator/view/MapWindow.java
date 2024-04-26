@@ -47,25 +47,25 @@ class MapWindow extends JFrame implements EcoSysObserver {
 		addWindowListener(new WindowListener() {
 
 			@Override
-			public void windowOpened(WindowEvent e) {}
+			public void windowOpened(WindowEvent e) { }
 
 			@Override
 			public void windowClosing(WindowEvent e) { _ctrl.removeObserver(MapWindow.this); }
 
 			@Override
-			public void windowClosed(WindowEvent e) {}
+			public void windowClosed(WindowEvent e) { }
 
 			@Override
-			public void windowIconified(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) { }
 
 			@Override
-			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) { }
 
 			@Override
-			public void windowActivated(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) { }
 
 			@Override
-			public void windowDeactivated(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) { }
 			
 		});
 
@@ -84,13 +84,13 @@ class MapWindow extends JFrame implements EcoSysObserver {
 	// Llama al reset del viewer
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		SwingUtilities.invokeLater(()-> {_viewer.reset(time, map, animals); pack();});
+		SwingUtilities.invokeLater(() -> { _viewer.reset(time, map, animals); pack(); });
 	}
 	
 	// Llama al reset del viewer
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		SwingUtilities.invokeLater(()-> {_viewer.reset(time, map, animals); pack();});
+		SwingUtilities.invokeLater(() -> { _viewer.reset(time, map, animals); pack(); });
 	}
 	
 	// No hace nada
@@ -104,6 +104,6 @@ class MapWindow extends JFrame implements EcoSysObserver {
 	// No hace nada
 	@Override
 	public void onAvanced(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		SwingUtilities.invokeLater( () ->	this._viewer.update(animals, time));
+		SwingUtilities.invokeLater( () ->	_viewer.update(animals, time));
 	}
 }

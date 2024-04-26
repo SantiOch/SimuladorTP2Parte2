@@ -31,13 +31,13 @@ import simulator.launcher.Main;
 
 @SuppressWarnings("serial")
 public class ControlPanel extends JPanel {
-	
+
 	private Controller _ctrl;
 	private ChangeRegionsDialog _changeRegionsDialog;
 	private JToolBar _toolBar;
 	private JFileChooser _fc;
 
-//	private FileDialog fd;
+	//	private FileDialog fd;
 
 	private boolean _stopped = true; // utilizado en los botones de run/stop
 	private JButton _quitButton;
@@ -62,8 +62,6 @@ public class ControlPanel extends JPanel {
 
 		_fc = new JFileChooser();
 		_fc.setCurrentDirectory(new File(System.getProperty("user.dir") + "/resources/examples"));
-		
-
 
 		// FileChooser Button
 		_fileButton = new JButton();
@@ -71,39 +69,38 @@ public class ControlPanel extends JPanel {
 		_fileButton.setIcon(new ImageIcon("resources/icons/open.png"));
 		_fileButton.addActionListener((e) -> {
 
-			
-//			JFrame f = new JFrame();
-//			fd = new FileDialog(f, "Choose a file", FileDialog.LOAD);
-//			fd.setDirectory(System.getProperty("user.dir") + "/resources/examples");
-//			fd.setVisible(true);
-//
-//			if(fd.getFile() == null) {
-//				ViewUtils.showErrorMsg("Error cargando el archivo de entrada");
-//
-//			}else {
-//				try {
-//					InputStream in = new FileInputStream(new File(fd.getDirectory() + fd.getFile()));
-//					JSONObject jo = new JSONObject(new JSONTokener(in));
-//				_ctrl.reset(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"));
-//				_ctrl.load_data(jo);
-//				} catch (FileNotFoundException e1) {
-//					e1.printStackTrace();
-//				}
-//			}
-			
+
+			//			JFrame f = new JFrame();
+			//			fd = new FileDialog(f, "Choose a file", FileDialog.LOAD);
+			//			fd.setDirectory(System.getProperty("user.dir") + "/resources/examples");
+			//			fd.setVisible(true);
+			//
+			//			if(fd.getFile() == null) {
+			//				ViewUtils.showErrorMsg("Error cargando el archivo de entrada");
+			//
+			//			}else {
+			//				try {
+			//					InputStream in = new FileInputStream(new File(fd.getDirectory() + fd.getFile()));
+			//					JSONObject jo = new JSONObject(new JSONTokener(in));
+			//				_ctrl.reset(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"));
+			//				_ctrl.load_data(jo);
+			//				} catch (FileNotFoundException e1) {
+			//					e1.printStackTrace();
+			//				}
+			//			}
+
 			if(_fc.showOpenDialog(ViewUtils.getWindow(this)) == JFileChooser.APPROVE_OPTION) {
 
 				try {
-						
+
 					InputStream in = new FileInputStream(_fc.getSelectedFile());
 					JSONObject jo = new JSONObject(new JSONTokener(in));
-					
+
 					_ctrl.reset(jo.getInt("cols"), jo.getInt("rows"), jo.getInt("width"), jo.getInt("height"));
 					_ctrl.load_data(jo);
-					
-				}catch(Exception exc) {
 
-					ViewUtils.showErrorMsg("Error cargando el archivo de entrada" + exc.getMessage());
+				}catch(Exception exc) {
+					ViewUtils.showErrorMsg("Error cargando el archivo de entrada: " + exc.getMessage());
 				}
 			}
 		});
@@ -117,13 +114,13 @@ public class ControlPanel extends JPanel {
 		_viewerButton.setToolTipText("Show map viewer");
 		_viewerButton.setIcon(new ImageIcon("resources/icons/viewer.png"));
 		_viewerButton.addActionListener((e)-> {
-			
+
 			JFrame f = new JFrame();
-						
+
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 			f.setSize(screenSize);
-			
+
 			SwingUtilities.invokeLater(() -> new MapWindow(f, _ctrl));
 		});
 
@@ -135,7 +132,7 @@ public class ControlPanel extends JPanel {
 		_regionsButton.setToolTipText("Show region");
 		_regionsButton.setIcon(new ImageIcon("resources/icons/regions.png"));
 		_regionsButton.addActionListener((e) ->  _changeRegionsDialog.open(ViewUtils.getWindow(this)) );
-		
+
 		// Añadimos el botón para el cambio de regiones y un separador
 		_toolBar.add(_regionsButton);
 		_toolBar.addSeparator();
@@ -146,16 +143,19 @@ public class ControlPanel extends JPanel {
 		_playButton.setIcon(new ImageIcon("resources/icons/run.png"));
 		_playButton.addActionListener((e)-> {
 
-			disableButtons();
-			_stopped = false;
-			
-			Double dt = Double.parseDouble(_dt.getText());
-			Integer time = (Integer) _steps.getValue();
-			
-			run_sim(time, dt);
+			try {
+				Double dt = Double.parseDouble(_dt.getText());
+				Integer time = (Integer) _steps.getValue();
+				disableButtons();
+				_stopped = false;
+				run_sim(time, dt);
+			} catch(Exception ex) {
+				ViewUtils.showErrorMsg("Error al iniciar el simluador: " + ex.getMessage());
+				_dt.setText(Main._default_delta_time.toString());
+			}
 
 		});
-		
+
 		// Añadimos el botón para renaudar
 		_toolBar.add(_playButton);
 
@@ -167,7 +167,7 @@ public class ControlPanel extends JPanel {
 			_stopped = true;
 			enableButtons();
 		});
-		
+
 		// Añadimos el botón para pausar
 		_toolBar.add(_pauseButton);
 
@@ -176,7 +176,7 @@ public class ControlPanel extends JPanel {
 		_steps.setMaximumSize(new Dimension(80, 40));
 		_steps.setMinimumSize(new Dimension(80, 40));
 		_steps.setPreferredSize(new Dimension(80, 40));	
-		
+
 		// Añadimos el JLabel y el spinner
 		_toolBar.add(new JLabel("Steps: "));
 		_toolBar.add(_steps);
@@ -193,7 +193,7 @@ public class ControlPanel extends JPanel {
 		_quitButton.setToolTipText("Quit");
 		_quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
 		_quitButton.addActionListener((e) -> ViewUtils.quit(this));
-		
+
 		// Añadimos el botón para cerrar
 		_toolBar.add(_quitButton);
 
@@ -205,11 +205,12 @@ public class ControlPanel extends JPanel {
 		if (n > 0 && !_stopped) {
 			try {
 				_ctrl.advance(dt);
+				Thread.sleep((long) (dt * 700));
 				SwingUtilities.invokeLater(() -> run_sim(n - 1, dt)); 
 
 			} catch (Exception e) {
 
-				ViewUtils.showErrorMsg(e.getMessage());
+				ViewUtils.showErrorMsg("Ha ocurrido un error durante la ejecución: " + e.getMessage());
 				enableButtons();
 				_stopped = true;
 			}
@@ -220,7 +221,7 @@ public class ControlPanel extends JPanel {
 		}
 	}
 
-	// Para desactivar todos los botones menos el de pausa
+	// Para activar todos los botones menos el de pausa (no se desactiva nunca)
 	private void enableButtons() {
 		_quitButton.setEnabled(true);
 		_fileButton.setEnabled(true);
@@ -229,7 +230,7 @@ public class ControlPanel extends JPanel {
 		_playButton.setEnabled(true);		
 	}
 
-	// Para activar todos los botones menos el de pausa (ya debería estar activado)
+	// Para desactivar todos los botones menos el de pausa
 	private void disableButtons() {
 		_quitButton.setEnabled(false);
 		_fileButton.setEnabled(false);

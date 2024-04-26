@@ -14,9 +14,7 @@ public abstract class Builder<T> {
 		_desc = desc;
 	}
 	
-	public String get_type_tag() {
-		return _type_tag;
-	}
+	public String get_type_tag() { return _type_tag; }
 	
 	public JSONObject get_info() {
 		JSONObject info = new JSONObject();
@@ -28,14 +26,10 @@ public abstract class Builder<T> {
 		return info;
 	}
 	
-	protected void fill_in_data(JSONObject o) {
-	}
+	protected void fill_in_data(JSONObject o) { }
 
 	@Override
-	public String toString() {
-		
-		return _desc;
-	}
+	public String toString() { return _desc; }
 	
 	protected abstract T create_instance(JSONObject data);
 }

@@ -38,28 +38,26 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-				
-		switch(columnIndex) {
-		case 0:
-			return _regions.get(rowIndex).row();
-		case 1:
-			return _regions.get(rowIndex).col();
-		case 2:
-			return _regions.get(rowIndex).r();
-		default:
-			return _regions.get(rowIndex).r().getAnimalsInfo().stream().filter(a->a.get_diet() == Diet.valueOf(_colNames.get(columnIndex))).count();
-		}
+		
+		return switch (columnIndex) {
+		case 0 -> _regions.get(rowIndex).row();
+		case 1 -> _regions.get(rowIndex).col();
+		case 2 -> _regions.get(rowIndex).r();
+		default -> _regions.get(rowIndex).r().getAnimalsInfo().stream().filter((a) -> a.get_diet() == Diet.valueOf(_colNames.get(columnIndex))).count();
+		};
 	}
 
 	// Añade los titulos de las columnas y las regiones
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		this._rowCount = map.get_rows() * map.get_cols();
+		
+		_rowCount = map.get_rows() * map.get_cols();
+		
 		_colNames.add("Row");
 		_colNames.add("Col");
 		_colNames.add("Desc.");
 
-		for(RegionData r: map) this._regions.add(r);
+		for(RegionData r: map) _regions.add(r);
 		
 		for(Diet d: Diet.values()) _colNames.add(d.toString());
 	}
@@ -67,12 +65,12 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 	// Cambia el numero de columnas y mete la información de las regiones
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		this._rowCount = map.get_rows() * map.get_cols();
+		_rowCount = map.get_rows() * map.get_cols();
 		
-		this._regions = new LinkedList<>();
+		_regions = new LinkedList<>();
 		
 		for(RegionData r: map) {
-			this._regions.add(r);
+			_regions.add(r);
 		}
 
 		fireTableDataChanged();
@@ -88,7 +86,7 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 		
 		int index = row * map.get_cols() + col;
 
-		this._regions.set(index, new RegionData(row, col,  r));
+		_regions.set(index, new RegionData(row, col,  r));
 	}
 
 	// Vuelve a pintar la tabla

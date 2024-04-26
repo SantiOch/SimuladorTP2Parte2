@@ -151,7 +151,6 @@ public class RegionManager implements AnimalMapView{
 				
 		Region r = regByPos(a.get_position());
 		
-
 		r.add_animal(a);
 		
 		this._animal_region.put(a, r);

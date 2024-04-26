@@ -37,32 +37,18 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 
 	@Override
 	public T create_instance(JSONObject info) {
-		if (info == null) {
-			throw new IllegalArgumentException("’info’ cannot be null");
-		}
+		
+		if (info == null) throw new IllegalArgumentException("’info’ cannot be null");
 
 		Builder<T> b = this._builders.get(info.getString("type"));
 
 		T instance = null;
 
-		if(b != null) {
+		if(b != null) instance = b.create_instance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
 
-			instance = b.create_instance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
-
-		}
-
-		if(b == null || instance == null)
-			throw new IllegalArgumentException("Unrecognized ‘info’:" + info.toString());
+		if(b == null || instance == null) throw new IllegalArgumentException("Unrecognized ‘info’:" + info.toString()); 
 
 		return instance;
-		// Look for a builder with a tag equals to info.getString("type"), in the
-		//  map _builder, and call its create_instance method and return the result
-		// if it is not null. The value you pass to create_instance is the following
-		// because ‘data’ is optional:
-		//
-		//   info.has("data") ? info.getJSONObject("data") : new getJSONObject()
-		//...
-		// If no builder is found or the result is null ...
 	}
 	@Override
 	public List<JSONObject> get_info() {

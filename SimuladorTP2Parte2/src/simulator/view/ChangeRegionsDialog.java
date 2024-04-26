@@ -40,7 +40,7 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 	private DefaultTableModel _dataTableModel;
 	private Controller _ctrl;
 	private List<JSONObject> _regionsInfo;
-	private String[] _headers = { "Key", "Value", "Description" };
+	private final String[] _headers = { "Key", "Value", "Description" };
 
 	int _rows;
 	int _cols;
@@ -107,7 +107,7 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		_regionsModel = new DefaultComboBoxModel<>();
 
 		// Añadir cada tipo de región
-		for(JSONObject jo: this._regionsInfo) _regionsModel.addElement(jo.getString("type"));
+		for(JSONObject jo: _regionsInfo) { _regionsModel.addElement(jo.getString("type")); }
 
 		// Creamos el panel inferior, que contiene los combobox
 		JComboBox<String> regions = new JComboBox<>(_regionsModel);	
@@ -123,9 +123,7 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			_dataTableModel.setRowCount(0);
 
 			// Iteramos sobre las keys y añadimos dependiendo de el tipo de región
-			for(String s: data.keySet()) {
-				_dataTableModel.addRow(new Object[] {s, "", data.get(s)});
-			}
+			for(String s: data.keySet()) { _dataTableModel.addRow(new Object[] {s, "", data.get(s)}); }
 			
 		});
 		
@@ -161,18 +159,18 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		panelInferior.add(fromCol);
 		panelInferior.add(toCol);
 		
-		// Crear los botones OK y Cancel y añadirlos al diálogo.
+		// Crear los botones ok y cancel y añadirlos al diálogo.
 		JButton cancel = new JButton("Cancel");
 		
 		// Si se pulsa hacemos la ventana invisible
-		cancel.addActionListener((e) -> this.setVisible(false));
+		cancel.addActionListener((e) -> setVisible(false));
 		
 		JButton ok = new JButton("Ok");
 		
 		// Funcionalidad del botón de ok, creando JSON de la región con los valores  
 		ok.addActionListener((e) -> {
 			
-			JSONObject jo = new JSONObject();
+			JSONObject JSONRegion = new JSONObject();
 			JSONObject spec = new JSONObject();
 			JSONObject region_data = new JSONObject();
 			
@@ -191,8 +189,8 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			col.put(toCol.getSelectedItem());
 
 			// Colocamos los arrays
-			jo.put("row",row);
-			jo.put("col",col);
+			JSONRegion.put("row",row);
+			JSONRegion.put("col",col);
 			
 			// Para iterar sobre las diferentes keys
 			JSONObject info =	_regionsInfo.get(regions.getSelectedIndex());
@@ -204,10 +202,11 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			// Iteramos sobre las diferentes keys
 			for(String s: data.keySet()) {
 				
+				// Cogemos el valor de la celda
+				Object val = _dataTableModel.getValueAt(cont, 1);
+				
 				// Si la celda no está vacía metemos el valor de dicha celda en el JSON
-				if(!_dataTableModel.getValueAt(cont, 1).equals("") && _dataTableModel.getValueAt(cont, 1) != null) {
-					region_data.put(s, _dataTableModel.getValueAt(cont, 1));
-				}
+				if(!val.equals("") && val != null) { region_data.put(s, val);	}
 			
 				cont++;
 			}
@@ -217,18 +216,18 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			spec.put("type", region_type);
 			
 			// Colocamos las especificaciones
-			jo.put("spec", spec);
+			JSONRegion.put("spec", spec);
 			
-			JSONObject JSONRegiones = new JSONObject();
+			JSONObject JSONRegionesGrande = new JSONObject();
 			JSONArray arrayRegiones = new JSONArray();
 			
-			arrayRegiones.put(jo);
+			arrayRegiones.put(JSONRegion);
 			
-			JSONRegiones.put("regions", arrayRegiones);
+			JSONRegionesGrande.put("regions", arrayRegiones);
 			
-			_ctrl.set_regions(JSONRegiones);
+			_ctrl.set_regions(JSONRegionesGrande);
 			
-			this.setVisible(false);
+			setVisible(false);
 		});
 
 		// Panel el botón de cancelar o aceptar
@@ -258,8 +257,8 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 	private void setCombobox(MapInfo map) {
 		
 		// Establecemos las nuevas filas y columnas 
-		this._cols = map.get_cols();
-		this._rows = map.get_rows();
+		_cols = map.get_cols();
+		_rows = map.get_rows();
 		
 		// Quitamos todos los elementos de los commobox que ya tenemos
 		_fromRowModel.removeAllElements();
@@ -268,16 +267,10 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		_toColModel.removeAllElements();
 		
 		// Colocamos los elementos de las filas
-		for(int i = 0; i < _rows; i++) {
-			_fromRowModel.addElement(i + "");
-			_toRowModel.addElement(i + "");
-		}
+		for(int i = 0; i < _rows; i++) { _fromRowModel.addElement(i + ""); _toRowModel.addElement(i + ""); }
 		
 		// Colocamos los elementos de las columnas
-		for(int i = 0; i < _cols; i++) {
-			_fromColModel.addElement(i + "");
-			_toColModel.addElement(i + "");
-		}
+		for(int i = 0; i < _cols; i++) { _fromColModel.addElement(i + ""); _toColModel.addElement(i + ""); }
 	}
 	
 	// Establece las filas y columnas para los combobox
