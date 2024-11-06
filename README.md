@@ -5,8 +5,8 @@ This project simulates an ecosystem with various animal species and interactions
 
 ### General Features
 
-- **Animal Simulation**: Simulate different species with unique behaviors and characteristics, including wolves, herbivores, and more.
-- **Dynamic Ecosystem**: Animals interact with each other and their environment, with varying states (normal, hungry, mating) affecting their actions.
+- **Animal Simulation**: Simulate different species with different behaviors.
+- **Dynamic Ecosystem**: Animals interact with each other and their environment, with different states depending on the animal itself.
 - **Observer Pattern**: The system utilizes the Observer pattern to notify components of state changes, ensuring the UI updates in response to the simulation state.
 
 ### GUI Mode Features
